@@ -164,17 +164,21 @@ function genTags(topic) {
   });
   return { tags: out, chars: chars };
 }
-function genHashtags(topic) {
+var PLATFORM_HASHTAGS = {
+  youtube: ['#YouTube', '#Viral', '#Trending'],
+  tiktok: ['#fyp', '#foryou', '#foryoupage', '#viral', '#trending', '#tiktok'],
+  facebook: ['#reels', '#facebookreels', '#viral', '#trending']
+};
+function genHashtags(topic, platform) {
   var t = cleanTopic(topic), niche = detectNiche(t);
   var tags = [hashTag(t)];
   t.split(' ').forEach(function (w) { if (w.length > 3) tags.push(hashTag(w)); });
   if (niche) tags = tags.concat(niche.hashtags);
-  tags.push('#YouTube', '#Viral', '#Trending');
+  tags = tags.concat(PLATFORM_HASHTAGS[platform] || PLATFORM_HASHTAGS.youtube);
   return uniq(tags).slice(0, 15);
 }
-function genTitles(topic) {
-  var T = titleCase(topic);
-  var templates = [
+var TITLE_TEMPLATES = {
+  youtube: [
     'I Tried {T} for 30 Days — Here\'s What Happened',
     '{T} Explained in 10 Minutes (2026 Guide)',
     '10 {T} Tips You Wish You Knew Earlier',
@@ -191,7 +195,37 @@ function genTitles(topic) {
     '5 {T} Secrets the Pros Don\'t Want You to Know',
     '{T} — Everything You Need to Know Before You Start',
     'Rating Popular {T} Advice: What Actually Works?'
-  ];
+  ],
+  tiktok: [
+    'POV: You Finally Try {T} 😱',
+    'Wait for It… This {T} Broke the Internet 🤯',
+    'Nobody Talks About This {T} Trick 🤫',
+    '3 {T} Hacks in 30 Seconds ⚡',
+    'I Tried {T} So You Don\'t Have To 😅',
+    '{T} Check ✅ Did I Do It Right?',
+    'The {T} Hack Everyone Needs to Know 🔥',
+    'Rating {T} Until I Find a 10/10 ⭐',
+    'This {T} Has 10M Views for a Reason 👀',
+    '{T} in 15 Seconds — Go! ⏱️',
+    'Stop Scrolling! You Need This {T} 🛑',
+    'Day 1 of {T} — Follow My Journey 📈'
+  ],
+  facebook: [
+    '{T} That Will Blow Your Mind 🤯 (Share This!)',
+    'Everyone Is Sharing This {T} Video — Here\'s Why',
+    'You Won\'t Believe What This {T} Can Do 😲',
+    '{T} for Beginners — Tag Someone Who Needs This 👇',
+    'The {T} Video Your Friends Will Thank You For Sharing ❤️',
+    '10 {T} Tips That Actually Work in 2026',
+    'This {T} Changed Everything for Me 🙏',
+    '{T} Explained Simply — Perfect for Sharing 📤',
+    'Watch Till the End: {T} Surprise! 🎁',
+    'The Truth About {T} Nobody Tells You 🤫'
+  ]
+};
+function genTitles(topic, platform) {
+  var T = titleCase(topic);
+  var templates = TITLE_TEMPLATES[platform] || TITLE_TEMPLATES.youtube;
   return templates.map(function (s) { return s.split('{T}').join(T); });
 }
 function genChannelNames(topic, playful) {
@@ -209,6 +243,15 @@ function genChannelNames(topic, playful) {
       'The' + base + 'Guide', base + 'World', short + ' Central', 'AllAbout' + base];
   }
   return uniq(names).slice(0, 16);
+}
+function genPlatformKeywords(topic, platform) {
+  var t = cleanTopic(topic).toLowerCase();
+  var out = [t, t + ' viral', t + ' trending', 'best ' + t, t + ' 2026',
+    'how to ' + t, t + ' challenge', t + ' tips', t + ' for beginners',
+    'viral ' + t + ' video', t + ' hack'];
+  if (platform === 'tiktok') out = out.concat([t + ' tiktok', '#'+t.replace(/\s+/g,'') + ' trend']);
+  if (platform === 'facebook') out = out.concat([t + ' reels', t + ' facebook']);
+  return uniq(out).slice(0, 15);
 }
 var COMMENT_QUESTIONS = [
   'What is YOUR experience with this? Tell me in the comments!',
@@ -302,7 +345,7 @@ var runners = {
   },
   'ai-title-generator': function (panel) {
     var v = needTopic(panel); if (!v) return;
-    var titles = genTitles(v.topic);
+    var titles = genTitles(v.topic, v.platform || 'youtube');
     showResult(panel, {
       title: titles.length + ' viral title ideas',
       html: '<ol class="result-list">' + titles.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ol>',
@@ -325,7 +368,7 @@ var runners = {
   },
   'ai-hashtag-generator': function (panel) {
     var v = needTopic(panel); if (!v) return;
-    var tags = genHashtags(v.topic);
+    var tags = genHashtags(v.topic, v.platform || 'youtube');
     showResult(panel, {
       title: tags.length + ' hashtags',
       html: chipsHtml(tags) + '<div class="char-count">Tip: YouTube shows the first 3 hashtags above your video title — put your best 3 first.</div>',
@@ -359,6 +402,16 @@ var runners = {
     var v = getVals(panel);
     var q = cleanTopic(v.keyword);
     if (!q) { setStatus(panel, 'Please enter a keyword first.'); return; }
+    var platform = v.platform || 'youtube';
+    if (platform !== 'youtube') {
+      var kws = genPlatformKeywords(q, platform);
+      showResult(panel, {
+        title: kws.length + ' ' + platform.charAt(0).toUpperCase() + platform.slice(1) + ' keyword ideas for "' + q + '"',
+        html: chipsHtml(kws) + '<div class="char-count">Optimized keyword ideas for ' + platform + ' — mix these into your captions and hashtags.</div>',
+        actions: [{ label: 'Copy all keywords', text: function () { return kws.join('\n'); } }]
+      });
+      return;
+    }
     setStatus(panel, 'Fetching live YouTube suggestions…', true);
     fetch('/api/yt-suggest?q=' + encodeURIComponent(q))
       .then(function (r) { return r.json(); })
@@ -543,7 +596,7 @@ else init();
 if (typeof window !== 'undefined') {
   window.__ytTools = {
     genTags: genTags, genTitles: genTitles, genHashtags: genHashtags,
-    genDescription: genDescription, genChannelNames: genChannelNames,
+    genDescription: genDescription, genChannelNames: genChannelNames, genPlatformKeywords: genPlatformKeywords,
     detectNiche: detectNiche, titleCase: titleCase, cleanTopic: cleanTopic,
     videoIdFromUrl: videoIdFromUrl
   };
