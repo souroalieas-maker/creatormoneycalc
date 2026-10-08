@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Login · CreatorMoneyCalc</title>
+<title>Admin Login · TubeBoost</title>
 <link rel="stylesheet" href="/assets/css/admin.css">
 </head>
 <body>
 <div class="auth-wrap">
   <div class="auth-card">
     <h1>Admin Login</h1>
-    <p class="sub">Sign in to manage CreatorMoneyCalc.</p>
+    <p class="sub">Sign in to manage TubeBoost.</p>
     <% if (error) { %><div class="flash flash-error" role="alert"><%= error %></div><% } %>
     <form method="post" action="/admin/login">
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">

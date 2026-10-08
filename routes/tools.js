@@ -53,7 +53,7 @@ const TOOLS = [
       { q: 'Do hashtags in the description help?', a: 'Yes — the first 3 hashtags appear above your video title and are clickable. Use 3–5 highly relevant hashtags; stuffing 15+ looks spammy and YouTube may ignore them.' },
       { q: 'Should I copy someone else\'s description?', a: 'No. Duplicate descriptions can hurt both videos. Use this generator to create a unique, keyword-rich description for every upload.' },
     ],
-    seoTitle: 'YouTube SEO Description Generator — Free AI Description Maker | CreatorMoneyCalc',
+    seoTitle: 'YouTube SEO Description Generator — Free AI Description Maker | TubeBoost',
     seoDesc: 'Type your topic and get a full SEO-optimized YouTube description: hook, chapters, hashtags, tags and CTA. Free, instant, no sign-up.',
   },
   {
@@ -71,7 +71,7 @@ const TOOLS = [
       { q: 'Should I use ALL CAPS in titles?', a: 'One or two capitalized words are fine for emphasis, but full ALL CAPS titles look spammy and can hurt trust.' },
       { q: 'How important is the title vs the thumbnail?', a: 'They work as a team: the thumbnail stops the scroll, the title closes the click. Never repeat the exact same words in both — use them to tell one story together.' },
     ],
-    seoTitle: 'YouTube Title Generator — 16 Viral Video Title Ideas (Free) | CreatorMoneyCalc',
+    seoTitle: 'YouTube Title Generator — 16 Viral Video Title Ideas (Free) | TubeBoost',
     seoDesc: 'Generate clickable YouTube titles from any topic. 16 proven viral formats with power words and numbers — free, instant.',
   },
   {
@@ -89,7 +89,7 @@ const TOOLS = [
       { q: 'How many tags should I use?', a: 'YouTube allows 500 characters total. Around 20–30 focused tags beat 100 random ones. Never reuse the same giant tag block on every video.' },
       { q: 'Should tags match my title?', a: 'Your first 2–3 tags should closely match your title keywords, then expand into long-tail variations and related terms.' },
     ],
-    seoTitle: 'YouTube Tags Generator — Free SEO Tags (500-char optimized) | CreatorMoneyCalc',
+    seoTitle: 'YouTube Tags Generator — Free SEO Tags (500-char optimized) | TubeBoost',
     seoDesc: 'Generate optimized YouTube tags from any topic, auto-fitted to the 500-character limit. Free tag generator, no sign-up.',
   },
   {
@@ -107,7 +107,7 @@ const TOOLS = [
       { q: 'Is it okay to use a competitor\'s tags?', a: 'Using similar topical tags is normal research. But write your own set — identical tag blocks across channels look spammy to the algorithm.' },
       { q: 'Which video URLs work?', a: 'Standard watch URLs, youtu.be short links, Shorts and embed URLs all work.' },
     ],
-    seoTitle: 'YouTube Video Tags Extractor — See Any Video\'s Tags (Free) | CreatorMoneyCalc',
+    seoTitle: 'YouTube Video Tags Extractor — See Any Video\'s Tags (Free) | TubeBoost',
     seoDesc: 'Paste a YouTube URL to extract video details and get optimized tag suggestions. Free tags extractor tool.',
   },
   {
@@ -126,7 +126,7 @@ const TOOLS = [
       { q: 'How do I pick the best keyword?', a: 'Look for specific, longer phrases with clear intent ("how to start a faceless youtube channel") over vague ones ("youtube"). Then check the top results: if small channels rank, you can too.' },
       { q: 'How often should I do keyword research?', a: 'Before every video. Five minutes of research beats guessing — it tells you exactly what titles will get searched.' },
     ],
-    seoTitle: 'YouTube Keyword Suggestion Tool — Live Search Suggestions (Free) | CreatorMoneyCalc',
+    seoTitle: 'YouTube Keyword Suggestion Tool — Live Search Suggestions (Free) | TubeBoost',
     seoDesc: 'Get live YouTube keyword suggestions from real autocomplete data. Free keyword research tool for YouTubers.',
   },
   {
@@ -144,7 +144,7 @@ const TOOLS = [
       { q: 'Do hashtags help videos go viral?', a: 'They help discovery a little — mainly by grouping your video with trending topics. Title, thumbnail and retention matter far more.' },
       { q: 'Can I create my own branded hashtag?', a: 'Yes! A unique hashtag like #YourChannelName builds a clickable library of all your videos — great for community building.' },
     ],
-    seoTitle: 'YouTube Hashtag Generator — Free Hashtags for Videos | CreatorMoneyCalc',
+    seoTitle: 'YouTube Hashtag Generator — Free Hashtags for Videos | TubeBoost',
     seoDesc: 'Generate 15 optimized YouTube hashtags from any topic. Free hashtag generator with niche and trending tags.',
   },
   {
@@ -161,7 +161,7 @@ const TOOLS = [
       { q: 'Should I use the same hashtags on every video?', a: 'Keep 1–2 branded/niche hashtags consistent, but change the rest per video to match the actual topic. Identical blocks on every upload look automated.' },
       { q: 'Do popular hashtags guarantee more views?', a: 'No — they help categorization and discovery, but views come from click-through rate and watch time.' },
     ],
-    seoTitle: 'Popular YouTube Hashtags by Niche — Gaming, Tech, Finance… (Free) | CreatorMoneyCalc',
+    seoTitle: 'Popular YouTube Hashtags by Niche — Gaming, Tech, Finance… (Free) | TubeBoost',
     seoDesc: 'Browse popular YouTube hashtags for gaming, tech, finance, fitness, cooking, travel, music and more. Free, updated lists.',
   },
   {
@@ -179,7 +179,7 @@ const TOOLS = [
       { q: 'Can I change my channel name later?', a: 'Yes — YouTube lets you change your channel name without losing subscribers or videos. But rebranding confuses existing viewers, so choose well once.' },
       { q: 'Should my channel name include keywords?', a: 'A niche keyword helps discovery ("Tech", "Cooking"), but brandability matters more long-term. A blend of both is ideal.' },
     ],
-    seoTitle: 'YouTube Channel Name Generator — 16 Pro Name Ideas (Free) | CreatorMoneyCalc',
+    seoTitle: 'YouTube Channel Name Generator — 16 Pro Name Ideas (Free) | TubeBoost',
     seoDesc: 'Generate professional YouTube channel names from your niche. Brandable, memorable ideas — free, instant.',
   },
   {
@@ -196,7 +196,7 @@ const TOOLS = [
       { q: 'Creative or professional name — which is better?', a: 'It depends on your niche. Entertainment and vlogging reward creativity; finance, tech and education reward clarity and trust. When in doubt, pick clarity.' },
       { q: 'How do I check if a name is taken?', a: 'Search it on YouTube, Google, Instagram and TikTok. Also check domain availability if you ever want a website.' },
     ],
-    seoTitle: 'YouTube Channel Name Ideas — Creative & Catchy (Free) | CreatorMoneyCalc',
+    seoTitle: 'YouTube Channel Name Ideas — Creative & Catchy (Free) | TubeBoost',
     seoDesc: 'Get creative YouTube channel name ideas with personality. Free generator — stand out in your niche.',
   },
   {
@@ -215,7 +215,7 @@ const TOOLS = [
       { q: 'Should small channels chase trends?', a: 'Yes — trends are the fastest way for small channels to get discovered, because search demand temporarily exceeds the supply of good videos.' },
       { q: 'Trend vs evergreen — which is better?', a: 'Do both: 70% evergreen videos for steady growth, 30% trends for spikes. Trends bring subscribers; evergreen keeps them watching.' },
     ],
-    seoTitle: 'YouTube Trending Topic Finder — What\'s Hot in Your Niche (Free) | CreatorMoneyCalc',
+    seoTitle: 'YouTube Trending Topic Finder — What\'s Hot in Your Niche (Free) | TubeBoost',
     seoDesc: 'Find trending YouTube topics in your niche with live search data. Free trend finder for creators.',
   },
   {
@@ -232,7 +232,7 @@ const TOOLS = [
       { q: 'What should I look for when studying a channel?', a: 'Their 10 most-viewed videos (topics + titles), average video length, upload frequency, and thumbnail style. Patterns there are the strategy.' },
       { q: 'Is it okay to copy a successful channel?', a: 'Copy the strategy (topics, formats, packaging) — never the content. Put your own angle on proven topics.' },
     ],
-    seoTitle: 'YouTube Channel Explorer — Research Any Channel (Free) | CreatorMoneyCalc',
+    seoTitle: 'YouTube Channel Explorer — Research Any Channel (Free) | TubeBoost',
     seoDesc: 'Look up any YouTube channel instantly and get research links. Free channel explorer for creators.',
   },
   {
@@ -249,7 +249,7 @@ const TOOLS = [
       { q: 'Why does competitor research matter?', a: 'YouTube is a zero-sum feed: you win by being the best answer to a search or the most clickable video in suggested. Knowing who you\'re up against tells you the bar to beat.' },
       { q: 'How many competitors should I track?', a: '5–10 channels in your niche and size range. Watch every video they post for a month — you\'ll absorb their strategy by osmosis.' },
     ],
-    seoTitle: 'YouTube Competitor Finder — Discover Channels in Your Niche (Free) | CreatorMoneyCalc',
+    seoTitle: 'YouTube Competitor Finder — Discover Channels in Your Niche (Free) | TubeBoost',
     seoDesc: 'Find your YouTube competitors with live search data. Free competitor research tool for creators.',
   },
   {
@@ -267,7 +267,7 @@ const TOOLS = [
       { q: 'What size should my thumbnails be?', a: '1280×720 pixels (16:9), under 2MB. YouTube displays them small, so bold shapes and big text win.' },
       { q: 'Why does Full HD show a grey image sometimes?', a: 'Some older videos have no HD thumbnail stored. Use the SD version instead — it\'s the same design.' },
     ],
-    seoTitle: 'YouTube Thumbnail Downloader — Download HD Thumbnails (Free) | CreatorMoneyCalc',
+    seoTitle: 'YouTube Thumbnail Downloader — Download HD Thumbnails (Free) | TubeBoost',
     seoDesc: 'Download any YouTube thumbnail in HD quality. Free thumbnail downloader, no watermark, no sign-up.',
   },
   {
@@ -277,7 +277,7 @@ const TOOLS = [
     icon: '🧮',
     path: '/youtube-earnings-calculator',
     desc: 'Estimate your YouTube ad revenue from views and RPM — monthly, weekly, daily and yearly breakdowns.',
-    seoTitle: 'YouTube Earnings Calculator — Estimate Your Ad Revenue | CreatorMoneyCalc',
+    seoTitle: 'YouTube Earnings Calculator — Estimate Your Ad Revenue | TubeBoost',
     seoDesc: 'Estimate your potential YouTube earnings from views and RPM. Instant monthly, weekly, daily and yearly breakdowns.',
   },
 ];

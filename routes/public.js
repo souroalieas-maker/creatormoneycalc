@@ -14,7 +14,7 @@ const CALC_PAGES = {
   'earnings': {
     path: '/youtube-earnings-calculator',
     view: 'public/calc-earnings',
-    seoTitle: 'YouTube Earnings Calculator — Estimate Your Ad Revenue | CreatorMoneyCalc',
+    seoTitle: 'YouTube Earnings Calculator — Estimate Your Ad Revenue | TubeBoost',
     seoDesc: 'Estimate your potential YouTube earnings from views and RPM. Instant monthly, weekly, daily and yearly breakdowns — free, no sign-up.',
     formula: '(Views ÷ 1,000) × RPM = Estimated earnings',
     formulaNote: 'Your monthly views divided by 1,000, multiplied by your RPM (revenue per 1,000 views). That is the same basic math behind the revenue figures in YouTube Studio.',
@@ -34,7 +34,7 @@ const CALC_PAGES = {
   'rpm': {
     path: '/youtube-rpm-calculator',
     view: 'public/calc-rpm',
-    seoTitle: 'YouTube RPM Calculator — Find Your Revenue Per Mille | CreatorMoneyCalc',
+    seoTitle: 'YouTube RPM Calculator — Find Your Revenue Per Mille | TubeBoost',
     seoDesc: 'Calculate your YouTube RPM from revenue and views. See exactly what you earn per 1,000 views and how you compare to typical ranges.',
     formula: '(Revenue ÷ Views) × 1,000 = RPM',
     formulaNote: 'Take the revenue a video or channel earned, divide it by the number of views, and multiply by 1,000. The result is your RPM — revenue per mille (per thousand views).',
@@ -52,7 +52,7 @@ const CALC_PAGES = {
   'shorts': {
     path: '/youtube-shorts-earnings-calculator',
     view: 'public/calc-shorts',
-    seoTitle: 'YouTube Shorts Earnings Calculator — How Much Do Shorts Pay? | CreatorMoneyCalc',
+    seoTitle: 'YouTube Shorts Earnings Calculator — How Much Do Shorts Pay? | TubeBoost',
     seoDesc: 'Estimate your YouTube Shorts earnings with realistic Shorts RPM values. Free Shorts revenue calculator — no sign-up needed.',
     formula: '(Shorts views ÷ 1,000) × Shorts RPM = Estimated Shorts earnings',
     formulaNote: 'The math is the same as long-form, but the RPM is far lower: Shorts ad revenue goes into one shared pool that is divided among creators by their share of total Shorts views. A typical Shorts RPM is $0.03–$0.10.',
@@ -70,7 +70,7 @@ const CALC_PAGES = {
   'views-money': {
     path: '/youtube-views-to-money',
     view: 'public/calc-views',
-    seoTitle: 'YouTube Views to Money Calculator — What Are Views Worth? | CreatorMoneyCalc',
+    seoTitle: 'YouTube Views to Money Calculator — What Are Views Worth? | TubeBoost',
     seoDesc: 'See what 1K, 10K, 100K, 1M and 10M YouTube views could be worth at your RPM. Free instant estimates — no sign-up.',
     formula: '(Views ÷ 1,000) × RPM = Estimated earnings',
     formulaNote: 'Enter any RPM to see what each view milestone could be worth. Change the RPM and submit again to compare scenarios — for example, a $2 RPM versus a $6 RPM.',
@@ -88,7 +88,7 @@ const CALC_PAGES = {
   'engagement': {
     path: '/youtube-engagement-calculator',
     view: 'public/calc-engagement',
-    seoTitle: 'YouTube Engagement Rate Calculator — Measure Your Audience | CreatorMoneyCalc',
+    seoTitle: 'YouTube Engagement Rate Calculator — Measure Your Audience | TubeBoost',
     seoDesc: 'Calculate your YouTube engagement rate from views, likes, comments and shares. See how your audience stacks up — free and instant.',
     formula: '((Likes + Comments + Shares) ÷ Views) × 100 = Engagement rate %',
     formulaNote: 'Add up the visible interactions on a video (likes, comments and shares), divide by total views, and multiply by 100. The result is your engagement rate as a percentage.',
@@ -106,7 +106,7 @@ const CALC_PAGES = {
   'tiktok': {
     path: '/tiktok-earnings-calculator',
     view: 'public/calc-tiktok',
-    seoTitle: 'TikTok Earnings Calculator — How Much Does TikTok Pay? | CreatorMoneyCalc',
+    seoTitle: 'TikTok Earnings Calculator — How Much Does TikTok Pay? | TubeBoost',
     seoDesc: 'Estimate your TikTok Creator Rewards earnings from views. Free TikTok money calculator with honest rates — no sign-up needed.',
     formula: '(TikTok views ÷ 1,000) × Rate per 1,000 views = Estimated TikTok earnings',
     formulaNote: 'TikTok pays creators through the Creator Rewards program (formerly Creator Fund). Only qualified views on videos longer than 1 minute count, and the rate is far lower than YouTube — typically $0.02–$0.04 per 1,000 views. Enter your own rate to see your estimate.',
@@ -124,7 +124,7 @@ const CALC_PAGES = {
   'facebook': {
     path: '/facebook-earnings-calculator',
     view: 'public/calc-facebook',
-    seoTitle: 'Facebook Earnings Calculator — How Much Do Facebook Views Pay? | CreatorMoneyCalc',
+    seoTitle: 'Facebook Earnings Calculator — How Much Do Facebook Views Pay? | TubeBoost',
     seoDesc: 'Estimate your Facebook in-stream ad earnings from video views. Free Facebook money calculator — no sign-up needed.',
     formula: '(Facebook views ÷ 1,000) × RPM = Estimated Facebook earnings',
     formulaNote: 'Facebook pays creators through in-stream ads on eligible videos. Your RPM (revenue per 1,000 views) depends on audience country, niche and ad demand — typically $1–$5. Enter your own RPM to see your estimate.',

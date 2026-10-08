@@ -124,7 +124,7 @@ app.use(async (req, res) => {
 app.use((err, req, res, next) => {
   console.error('[server error]', err && err.message ? err.message : err);
   if (res.headersSent) return next(err);
-  const siteName = (res.locals.site && res.locals.site.site_name) || 'CreatorMoneyCalc';
+  const siteName = (res.locals.site && res.locals.site.site_name) || 'TubeBoost';
   res.status(err.status || 500).render('public/500', {
     site: res.locals.site || { site_name: siteName, seo_site_title: siteName, seo_meta_description: '' },
     seoTitle: `Something went wrong | ${siteName}`,
@@ -143,7 +143,7 @@ if (require.main === module) {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, async () => {
     const base = (process.env.SITE_URL || '').replace(/\/+$/, '') || `http://localhost:${PORT}`;
-    console.log(`CreatorMoneyCalc running at ${base}`);
+    console.log(`TubeBoost running at ${base}`);
     try {
       const row = await db.prepare('SELECT COUNT(*) AS c FROM admins').get();
       if (!row || Number(row.c) === 0) console.log('No admin users yet — visit /admin/setup to create the first admin.');
