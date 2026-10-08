@@ -15,15 +15,21 @@
   </div>
 
   <div class="tools-grid" id="toolsGrid">
-    <% tools.forEach(function(t){ %>
+    <% tools.forEach(function(t, i){ %>
     <a class="tool-card" href="<%= t.path || ('/tools/' + t.slug) %>" data-name="<%= (t.name + ' ' + t.desc).toLowerCase() %>">
       <% if (t.badge) { %><span class="<%= t.badge === 'HOT' ? 'badge-hot' : 'badge-pro' %>"><%= t.badge %></span><% } %>
-      <div class="tool-icon"><%= t.icon %></div>
+      <div class="tool-icon a<%= i % 6 %>"><%= t.icon %></div>
       <h3><%= t.name %></h3>
       <p><%= t.desc %></p>
       <span class="tool-go">Open tool &rarr;</span>
     </a>
     <% }) %>
+  </div>
+
+  <div class="cta-banner">
+    <h2>Start With the #1 Tool 🔥</h2>
+    <p>Type just your topic — get a full SEO-optimized YouTube description in seconds.</p>
+    <a class="btn" href="/tools/seo-description-generator">Try SEO Description Generator &rarr;</a>
   </div>
 
   <div class="pro-tip">
