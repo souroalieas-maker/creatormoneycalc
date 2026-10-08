@@ -154,4 +154,50 @@
   </div>
   <%- include('ad', { location: 'after_result' }) %>
 </form>
+<% } else if (_key === 'tiktok') { %>
+<form class="calc-form" data-calc="tiktok" novalidate>
+  <div class="field">
+    <label for="<%= _uid('views') %>">Monthly TikTok views</label>
+    <input type="number" id="<%= _uid('views') %>" name="views" inputmode="decimal" min="0" step="any" placeholder="e.g. 1000000" required>
+  </div>
+  <div class="field">
+    <label for="<%= _uid('rate') %>">Rate per 1,000 views (USD)</label>
+    <input type="number" id="<%= _uid('rate') %>" name="rate" inputmode="decimal" min="0" step="0.01" value="<%= (_d.default_tiktok_rate != null ? _d.default_tiktok_rate : 0.03) %>" required>
+    <span class="hint">Typical Creator Rewards rate: $0.02 &ndash; $0.04 (only videos over 1 minute qualify).</span>
+  </div>
+  <button class="btn btn-block" type="submit">Calculate TikTok Earnings</button>
+  <div class="calc-error" role="alert" hidden></div>
+  <%- include('ad', { location: 'before_result' }) %>
+  <div class="calc-results" hidden>
+    <div class="result-row"><span class="result-label">Estimated monthly TikTok earnings</span><span class="result-value" data-result="monthly">&ndash;</span></div>
+    <div class="result-row"><span class="result-label">Weekly</span><span class="result-value" data-result="weekly">&ndash;</span></div>
+    <div class="result-row"><span class="result-label">Daily</span><span class="result-value" data-result="daily">&ndash;</span></div>
+    <div class="result-row"><span class="result-label">Yearly</span><span class="result-value" data-result="yearly">&ndash;</span></div>
+    <p class="muted">Estimates only &mdash; TikTok pays little per view; most creators earn more from brand deals, TikTok Shop and live gifts.</p>
+  </div>
+  <%- include('ad', { location: 'after_result' }) %>
+</form>
+<% } else if (_key === 'facebook') { %>
+<form class="calc-form" data-calc="facebook" novalidate>
+  <div class="field">
+    <label for="<%= _uid('views') %>">Monthly Facebook video views</label>
+    <input type="number" id="<%= _uid('views') %>" name="views" inputmode="decimal" min="0" step="any" placeholder="e.g. 500000" required>
+  </div>
+  <div class="field">
+    <label for="<%= _uid('rpm') %>">RPM (USD)</label>
+    <input type="number" id="<%= _uid('rpm') %>" name="rpm" inputmode="decimal" min="0" step="0.01" value="<%= (_d.default_fb_rpm != null ? _d.default_fb_rpm : 3) %>" required>
+    <span class="hint">Typical Facebook in-stream RPM: $1 &ndash; $5.</span>
+  </div>
+  <button class="btn btn-block" type="submit">Calculate Facebook Earnings</button>
+  <div class="calc-error" role="alert" hidden></div>
+  <%- include('ad', { location: 'before_result' }) %>
+  <div class="calc-results" hidden>
+    <div class="result-row"><span class="result-label">Estimated monthly Facebook earnings</span><span class="result-value" data-result="monthly">&ndash;</span></div>
+    <div class="result-row"><span class="result-label">Weekly</span><span class="result-value" data-result="weekly">&ndash;</span></div>
+    <div class="result-row"><span class="result-label">Daily</span><span class="result-value" data-result="daily">&ndash;</span></div>
+    <div class="result-row"><span class="result-label">Yearly</span><span class="result-value" data-result="yearly">&ndash;</span></div>
+    <p class="muted">Estimates only &mdash; only monetized views on eligible videos earn revenue.</p>
+  </div>
+  <%- include('ad', { location: 'after_result' }) %>
+</form>
 <% } %>

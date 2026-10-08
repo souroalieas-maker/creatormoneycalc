@@ -66,6 +66,8 @@ const CALC_NAV = [
   { key: 'shorts', path: '/youtube-shorts-earnings-calculator' },
   { key: 'views-money', path: '/youtube-views-to-money' },
   { key: 'engagement', path: '/youtube-engagement-calculator' },
+  { key: 'tiktok', path: '/tiktok-earnings-calculator' },
+  { key: 'facebook', path: '/facebook-earnings-calculator' },
 ];
 
 /* Shared template locals on every request. */

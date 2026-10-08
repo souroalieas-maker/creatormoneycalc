@@ -325,6 +325,78 @@
     });
   }
 
+  /* ---------- tiktok (views ÷ 1000 × rate) ---------- */
+  function wireTiktok(form) {
+    var viewsInput = form.querySelector('input[name=views]');
+    var rateInput = form.querySelector('input[name=rate]');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      clearError(form);
+
+      var views = getNumber(viewsInput);
+      var rate = getNumber(rateInput);
+
+      if (!validFinite(views) || views <= 0) {
+        showError(form, 'Please enter your views (a number greater than 0).');
+        return;
+      }
+      if (!validFinite(rate) || rate < 0) {
+        showError(form, 'Please enter a valid rate (0 or higher).');
+        return;
+      }
+
+      var monthly = (views / 1000) * rate;
+      if (!validFinite(monthly)) {
+        showError(form, 'That calculation produced an invalid number. Please check your inputs.');
+        return;
+      }
+
+      fill(form, 'monthly', money(monthly));
+      fill(form, 'daily', money(monthly / 30));
+      fill(form, 'weekly', money(monthly / 4.33));
+      fill(form, 'yearly', money(monthly * 12));
+      revealResults(form);
+      trackCalc(form.getAttribute('data-calc') || 'tiktok');
+    });
+  }
+
+  /* ---------- facebook (views ÷ 1000 × rpm) ---------- */
+  function wireFacebook(form) {
+    var viewsInput = form.querySelector('input[name=views]');
+    var rpmInput = form.querySelector('input[name=rpm]');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      clearError(form);
+
+      var views = getNumber(viewsInput);
+      var rpm = getNumber(rpmInput);
+
+      if (!validFinite(views) || views <= 0) {
+        showError(form, 'Please enter your views (a number greater than 0).');
+        return;
+      }
+      if (!validFinite(rpm) || rpm < 0) {
+        showError(form, 'Please enter a valid RPM (0 or higher).');
+        return;
+      }
+
+      var monthly = (views / 1000) * rpm;
+      if (!validFinite(monthly)) {
+        showError(form, 'That calculation produced an invalid number. Please check your inputs.');
+        return;
+      }
+
+      fill(form, 'monthly', money(monthly));
+      fill(form, 'daily', money(monthly / 30));
+      fill(form, 'weekly', money(monthly / 4.33));
+      fill(form, 'yearly', money(monthly * 12));
+      revealResults(form);
+      trackCalc(form.getAttribute('data-calc') || 'facebook');
+    });
+  }
+
   /* ---------- init ---------- */
   document.addEventListener('DOMContentLoaded', function () {
     var forms = document.querySelectorAll('form.calc-form');
@@ -336,6 +408,8 @@
         case 'shorts': wireShorts(form); break;
         case 'views-money': wireViewsMoney(form); break;
         case 'engagement': wireEngagement(form); break;
+        case 'tiktok': wireTiktok(form); break;
+        case 'facebook': wireFacebook(form); break;
         default: break;
       }
     });

@@ -7,7 +7,7 @@ const { db } = require('../lib/db');
 const { md } = require('../lib/md');
 const helpers = require('../lib/helpers');
 
-const CALC_IDS = ['earnings', 'rpm', 'shorts', 'views-money', 'engagement'];
+const CALC_IDS = ['earnings', 'rpm', 'shorts', 'views-money', 'engagement', 'tiktok', 'facebook'];
 
 const CALC_PAGES = {
   'earnings': {
@@ -100,6 +100,42 @@ const CALC_PAGES = {
       { q: 'How is YouTube engagement rate calculated?', a: 'Add likes, comments and shares, divide by views, and multiply by 100. For example, 4,700 interactions on 100,000 views is a 4.7% engagement rate.' },
       { q: 'Does engagement affect the YouTube algorithm?', a: 'Engagement signals that viewers are satisfied, which the recommendation system pays attention to. Likes, comments and especially shares correlate with videos getting suggested more — though watch time and click-through rate matter too.' },
       { q: 'How can I improve my engagement rate?', a: 'Ask a specific question in each video, use a clear call to action, pin a comment to start discussion, reply to early comments, and make content that people want to share with a friend.' },
+    ],
+  },
+  'tiktok': {
+    path: '/tiktok-earnings-calculator',
+    view: 'public/calc-tiktok',
+    seoTitle: 'TikTok Earnings Calculator — How Much Does TikTok Pay? | CreatorMoneyCalc',
+    seoDesc: 'Estimate your TikTok Creator Rewards earnings from views. Free TikTok money calculator with honest rates — no sign-up needed.',
+    formula: '(TikTok views ÷ 1,000) × Rate per 1,000 views = Estimated TikTok earnings',
+    formulaNote: 'TikTok pays creators through the Creator Rewards program (formerly Creator Fund). Only qualified views on videos longer than 1 minute count, and the rate is far lower than YouTube — typically $0.02–$0.04 per 1,000 views. Enter your own rate to see your estimate.',
+    examples: [
+      '1,000,000 TikTok views at a $0.03 rate: (1,000,000 ÷ 1,000) × $0.03 = $30.',
+      '10,000,000 TikTok views at a $0.03 rate: (10,000,000 ÷ 1,000) × $0.03 = $300 — TikTok ad payouts are small, which is why most creators earn more from brand deals.',
+    ],
+    faqs: [
+      { q: 'How much does TikTok pay per 1,000 views?', a: 'Through the Creator Rewards program, TikTok typically pays around $0.02–$0.04 per 1,000 qualified views. That means one million views might earn roughly $20–$40 — far less than YouTube.' },
+      { q: 'Why is TikTok pay so low?', a: 'TikTok divides a fixed rewards pool among all eligible creators, and short videos generate less ad revenue per view than long YouTube videos. Most TikTok creators earn far more from brand sponsorships, TikTok Shop affiliate commissions and live gifts than from Creator Rewards.' },
+      { q: 'Which TikTok views count for earnings?', a: 'Only "qualified views" count: views on original videos longer than 1 minute, watched by real viewers (not from the For You feed autoplay loops that TikTok excludes), from eligible regions. Short clips under 1 minute earn nothing from Creator Rewards.' },
+      { q: 'How do TikTok creators actually make money?', a: 'The biggest income sources are brand deals and sponsorships, TikTok Shop affiliate sales, live stream gifts, and using TikTok to drive followers to YouTube, products or services. Creator Rewards is usually a small bonus, not the main income.' },
+    ],
+  },
+  'facebook': {
+    path: '/facebook-earnings-calculator',
+    view: 'public/calc-facebook',
+    seoTitle: 'Facebook Earnings Calculator — How Much Do Facebook Views Pay? | CreatorMoneyCalc',
+    seoDesc: 'Estimate your Facebook in-stream ad earnings from video views. Free Facebook money calculator — no sign-up needed.',
+    formula: '(Facebook views ÷ 1,000) × RPM = Estimated Facebook earnings',
+    formulaNote: 'Facebook pays creators through in-stream ads on eligible videos. Your RPM (revenue per 1,000 views) depends on audience country, niche and ad demand — typically $1–$5. Enter your own RPM to see your estimate.',
+    examples: [
+      '100,000 Facebook views at a $3 RPM: (100,000 ÷ 1,000) × $3 = $300.',
+      '1,000,000 Facebook views at a $3 RPM: (1,000,000 ÷ 1,000) × $3 = $3,000.',
+    ],
+    faqs: [
+      { q: 'How much does Facebook pay per 1,000 views?', a: 'Facebook in-stream ad RPM typically ranges from about $1 to $5, depending on audience country, niche and season. US audiences and business/finance content sit at the higher end.' },
+      { q: 'Which Facebook views earn money?', a: 'Only monetized views on eligible videos earn revenue — generally videos at least 1 minute long (3 minutes for some ad formats) from pages that meet Facebook\'s monetization policies. Views from ineligible regions or policy violations earn nothing.' },
+      { q: 'How does Facebook pay creators?', a: 'Facebook pays monthly once your balance reaches the $100 threshold, similar to YouTube. Earnings appear in Meta Business Suite under Monetization.' },
+      { q: 'How can I increase my Facebook earnings?', a: 'Post longer original videos (3+ minutes unlock more ad breaks), target audiences in high-ad-spend countries, stay consistent, and avoid policy violations that demonetize your page.' },
     ],
   },
 };
