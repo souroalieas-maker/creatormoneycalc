@@ -1,0 +1,55 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<section class="hero">
+  <div class="container">
+    <h1>YouTube Earnings Calculator</h1>
+    <p class="lead">Find out what your views could be worth. Enter your monthly views and RPM for an instant estimate &mdash; free, no sign-up needed.</p>
+  </div>
+</section>
+
+<main class="container">
+  <div class="calc-card">
+    <%- include('../partials/calc-form', { calcKey: 'earnings' }) %>
+  </div>
+
+  <%- include('../partials/ad', { location: 'homepage' }) %>
+
+  <section>
+    <h2 class="section-title">How Much Does YouTube Pay?</h2>
+    <p>YouTube pays creators <strong>55% of the advertising revenue</strong> their videos generate &mdash; YouTube keeps the other 45%. Your share is measured as <strong>RPM (revenue per 1,000 views)</strong>: the amount you actually earn per thousand views after YouTube&rsquo;s cut.</p>
+    <p>Because advertisers bid different amounts for different audiences, RPM varies widely. In higher-ad-spend countries like the United States, United Kingdom, Canada and Australia, long-form RPMs of <strong>$3&ndash;$8</strong> are typical; in many other regions RPMs sit under $1. Niche matters too &mdash; finance, business and software content attracts premium advertisers, while broad entertainment pays less per view.</p>
+    <p>Shorts are a separate system: all Shorts ad revenue goes into one shared pool that is divided among creators by their share of total Shorts views. That is why Shorts RPM is far lower &mdash; usually around <strong>$0.03&ndash;$0.10</strong>.</p>
+  </section>
+
+  <section>
+    <h2 class="section-title">Popular Creator Calculators</h2>
+    <div class="cards-grid">
+      <% calcNav.forEach(function(item){ %>
+      <div class="card">
+        <h3><a href="<%= item.path %>"><%= calcs[item.key].title %></a></h3>
+        <p><%= calcs[item.key].description %></p>
+        <a class="btn btn-secondary" href="<%= item.path %>">Open calculator</a>
+      </div>
+      <% }) %>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">How Our Calculator Works</h2>
+    <p>The math is the same simple formula creators use to sanity-check their YouTube Studio analytics:</p>
+    <p><code>(Views &divide; 1,000) &times; RPM = estimated earnings</code></p>
+    <ol>
+      <li><strong>Enter your monthly views</strong> &mdash; use your average from YouTube Studio for the most realistic result.</li>
+      <li><strong>Set your RPM</strong> &mdash; check your actual RPM in YouTube Studio, or pick your audience&rsquo;s country for a typical range.</li>
+      <li><strong>Get instant breakdowns</strong> &mdash; monthly, weekly, daily and yearly estimates, right on the page.</li>
+    </ol>
+    <div class="disclaimer-box">
+      <strong>Estimates only.</strong> Every result is a ballpark figure for planning and education &mdash; not a promise of income. Real revenue depends on monetized views (not all views earn), your niche, audience country, watch time and season.
+    </div>
+  </section>
+
+  <%- include('../partials/faq', { faqs: homeFaqs }) %>
+</main>
+
+<%- include('../partials/footer') %>

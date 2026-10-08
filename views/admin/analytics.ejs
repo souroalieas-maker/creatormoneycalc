@@ -1,0 +1,102 @@
+<div class="stat-cards">
+  <div class="stat-card">
+    <div class="stat-label">Today</div>
+    <div class="stat-value"><%= periods.today.visitors.toLocaleString('en-US') %></div>
+    <div class="stat-sub"><%= periods.today.pageviews.toLocaleString('en-US') %> pageviews · <%= periods.today.calcUses.toLocaleString('en-US') %> calc uses</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Last 7 Days</div>
+    <div class="stat-value"><%= periods.week.visitors.toLocaleString('en-US') %></div>
+    <div class="stat-sub"><%= periods.week.pageviews.toLocaleString('en-US') %> pageviews · <%= periods.week.calcUses.toLocaleString('en-US') %> calc uses</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Last 30 Days</div>
+    <div class="stat-value"><%= periods.month.visitors.toLocaleString('en-US') %></div>
+    <div class="stat-sub"><%= periods.month.pageviews.toLocaleString('en-US') %> pageviews · <%= periods.month.calcUses.toLocaleString('en-US') %> calc uses</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">All Time</div>
+    <div class="stat-value"><%= totals.visitors.toLocaleString('en-US') %></div>
+    <div class="stat-sub"><%= totals.pageviews.toLocaleString('en-US') %> pageviews · <%= totals.calcUses.toLocaleString('en-US') %> calc uses · <%= totals.blogViews.toLocaleString('en-US') %> blog views</div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-header"><h2>Traffic — last 30 days</h2></div>
+  <div class="chart"><canvas id="analyticsChart" height="120"></canvas></div>
+</div>
+
+<div class="form-row cols-2">
+  <div class="panel">
+    <div class="panel-header"><h2>Calculator Usage</h2></div>
+    <% if (calcRows.length) { %>
+    <div class="table-wrap"><table class="admin-table">
+      <thead><tr><th>Calculator</th><th>Uses</th></tr></thead>
+      <tbody>
+        <% calcRows.forEach(function(r, i) { %>
+        <tr>
+          <td><%= r.title %><% if (i === 0) { %> <span class="badge badge-blue">most used</span><% } %></td>
+          <td><%= Number(r.uses).toLocaleString('en-US') %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table></div>
+    <% } else { %><p class="empty-state">No calculator usage tracked yet.</p><% } %>
+  </div>
+  <div class="panel">
+    <div class="panel-header"><h2>Traffic Sources (30 days)</h2></div>
+    <% if (sources.length) { %>
+    <div class="table-wrap"><table class="admin-table">
+      <thead><tr><th>Source</th><th>Visits</th></tr></thead>
+      <tbody>
+        <% sources.forEach(function(s) { %>
+        <tr><td><%= s.source %></td><td><%= Number(s.count).toLocaleString('en-US') %></td></tr>
+        <% }); %>
+      </tbody>
+    </table></div>
+    <% } else { %><p class="empty-state">No source data yet.</p><% } %>
+  </div>
+</div>
+
+<div class="form-row cols-2">
+  <div class="panel">
+    <div class="panel-header"><h2>Most-Viewed Post</h2></div>
+    <% if (topPost) { %>
+      <p><strong><%= topPost.title %></strong></p>
+      <p><span class="badge badge-green"><%= Number(topPost.views).toLocaleString('en-US') %> views</span>
+      <a href="/admin/blog">Manage posts</a></p>
+    <% } else { %><p class="empty-state">No published posts yet.</p><% } %>
+  </div>
+  <div class="panel">
+    <div class="panel-header"><h2>Top Pages (30 days)</h2></div>
+    <% if (topPages.length) { %>
+    <div class="table-wrap"><table class="admin-table">
+      <thead><tr><th>Page</th><th>Views</th></tr></thead>
+      <tbody>
+        <% topPages.forEach(function(p) { %>
+        <tr><td><%= p.path %></td><td><%= Number(p.views).toLocaleString('en-US') %></td></tr>
+        <% }); %>
+      </tbody>
+    </table></div>
+    <% } else { %><p class="empty-state">No page data yet.</p><% } %>
+  </div>
+</div>
+
+<script>
+(function () {
+  var el = document.getElementById('analyticsChart');
+  if (!el || !window.Chart) return;
+  var data = <%- JSON.stringify(chart) %>;
+  new Chart(el, {
+    type: 'bar',
+    data: {
+      labels: data.labels,
+      datasets: [
+        { label: 'Visitors', data: data.visitors, backgroundColor: 'rgba(37,99,235,.75)' },
+        { label: 'Pageviews', data: data.pageviews, backgroundColor: 'rgba(15,23,42,.35)' }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true }, x: { ticks: { maxTicksLimit: 10 } } } }
+  });
+})();
+</script>

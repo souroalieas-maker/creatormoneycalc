@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reset Password · CreatorMoneyCalc</title>
+<link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <h1>Reset Password</h1>
+    <p class="sub">Choose a new password for your admin account.</p>
+    <% if (error) { %><div class="flash flash-error" role="alert"><%= error %></div><% } %>
+    <form method="post" action="/admin/reset">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="form-group">
+        <label for="password">New Password</label>
+        <input type="password" id="password" name="password" required autocomplete="new-password" minlength="10">
+        <span class="help">At least 10 characters.</span>
+      </div>
+      <div class="form-group">
+        <label for="confirm">Confirm New Password</label>
+        <input type="password" id="confirm" name="confirm" required autocomplete="new-password" minlength="10">
+      </div>
+      <button class="abtn" type="submit">Set New Password</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

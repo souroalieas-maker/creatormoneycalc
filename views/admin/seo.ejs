@@ -1,0 +1,17 @@
+<% if (error) { %><div class="flash flash-error" role="alert"><%= error %></div><% } %>
+<form method="post" action="/admin/seo">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <div class="panel">
+    <% fields.forEach(function(f) { var key = f[0]; var label = f[1]; var max = f[2]; %>
+    <div class="form-group">
+      <label for="<%= key %>"><%= label %></label>
+      <% if (key === 'seo_meta_description' || key === 'seo_home_description' || key === 'seo_keywords') { %>
+        <textarea id="<%= key %>" name="<%= key %>" maxlength="<%= max %>"><%= s[key] %></textarea>
+      <% } else { %>
+        <input type="text" id="<%= key %>" name="<%= key %>" value="<%= s[key] %>" maxlength="<%= max %>">
+      <% } %>
+    </div>
+    <% }); %>
+  </div>
+  <button class="abtn" type="submit">Save SEO Settings</button>
+</form>

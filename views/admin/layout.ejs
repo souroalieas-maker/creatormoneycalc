@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= pageTitle %> · Admin · CreatorMoneyCalc</title>
+<link rel="stylesheet" href="/assets/css/admin.css">
+<style>
+.nav-logout-btn{display:block;width:100%;text-align:left;padding:11px 12px;min-height:44px;border:0;border-radius:8px;background:transparent;color:#cbd5e1;font-weight:600;font-size:.95rem;cursor:pointer;font-family:inherit}
+.nav-logout-btn:hover{background:#1e293b;color:#fff}
+.topbar-user{margin-left:auto;color:#64748b;font-size:.9rem;font-weight:600;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="admin-shell">
+  <aside class="admin-sidebar">
+    <a class="sidebar-brand" href="/admin/dashboard">CreatorMoneyCalc <span>Admin</span></a>
+    <nav>
+      <ul>
+        <li><a href="/admin/dashboard" class="<%= active === 'dashboard' ? 'active' : '' %>">Dashboard</a></li>
+        <li><a href="/admin/analytics" class="<%= active === 'analytics' ? 'active' : '' %>">Analytics</a></li>
+        <li><a href="/admin/calculators" class="<%= active === 'calculators' ? 'active' : '' %>">Calculators</a></li>
+        <li><a href="/admin/blog" class="<%= active === 'blog' ? 'active' : '' %>">Blog Posts</a></li>
+        <li><a href="/admin/pages" class="<%= active === 'pages' ? 'active' : '' %>">Pages</a></li>
+        <li><a href="/admin/ads" class="<%= active === 'ads' ? 'active' : '' %>">Advertisements</a></li>
+        <li><a href="/admin/seo" class="<%= active === 'seo' ? 'active' : '' %>">SEO Settings</a></li>
+        <li><a href="/admin/settings" class="<%= active === 'settings' ? 'active' : '' %>">Website Settings</a></li>
+        <li><a href="/admin/messages" class="<%= active === 'messages' ? 'active' : '' %>">Messages<% if (typeof unreadCount !== 'undefined' && unreadCount > 0) { %> <span class="badge badge-red"><%= unreadCount %></span><% } %></a></li>
+        <li>
+          <form method="post" action="/admin/logout" style="margin:0">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="nav-logout-btn">Logout</button>
+          </form>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <button class="sidebar-toggle" type="button" aria-label="Toggle navigation">&#9776;</button>
+      <h1><%= pageTitle %></h1>
+      <span class="topbar-user">Welcome, Admin</span>
+    </header>
+    <div class="admin-content">
+      <% if (flash) { %>
+        <div class="flash flash-<%= flash.type %>" role="alert"><%= flash.msg %></div>
+      <% } %>
+      <%- include(contentView) %>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="/assets/js/admin.js" defer></script>
+</body>
+</html>

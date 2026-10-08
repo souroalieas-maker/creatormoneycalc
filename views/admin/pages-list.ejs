@@ -1,0 +1,16 @@
+<div class="panel">
+  <div class="panel-header"><h2>Site Pages</h2></div>
+  <div class="table-wrap"><table class="admin-table">
+    <thead><tr><th>Page</th><th>URL</th><th>Last Updated</th><th style="text-align:right">Actions</th></tr></thead>
+    <tbody>
+      <% pages.forEach(function(p) { %>
+      <tr>
+        <td><strong><%= p.title %></strong></td>
+        <td><code>/<%= p.slug %></code></td>
+        <td><%= p.updated_at %></td>
+        <td class="table-actions"><a class="abtn abtn-sm abtn-secondary" href="/admin/pages/<%= p.slug %>">Edit</a></td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table></div>
+</div>

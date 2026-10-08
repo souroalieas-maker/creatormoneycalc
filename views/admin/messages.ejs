@@ -1,0 +1,28 @@
+<div class="panel">
+  <div class="panel-header"><h2>Contact Messages</h2></div>
+  <% if (messages.length) { %>
+  <div class="table-wrap"><table class="admin-table">
+    <thead><tr><th>From</th><th>Message</th><th>Date</th><th>Status</th><th style="text-align:right">Actions</th></tr></thead>
+    <tbody>
+      <% messages.forEach(function(m) { %>
+      <tr>
+        <td><strong><%= m.name %></strong><br><span style="color:#64748b;font-size:.8rem"><%= m.email %></span></td>
+        <td style="max-width:320px"><%= String(m.message).slice(0, 140) %><%= String(m.message).length > 140 ? '…' : '' %></td>
+        <td><%= m.created_at %></td>
+        <td><% if (m.is_read) { %><span class="badge badge-gray">read</span><% } else { %><span class="badge badge-blue">unread</span><% } %></td>
+        <td class="table-actions">
+          <form method="post" action="/admin/messages/<%= m.id %>/read" style="display:inline">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="abtn abtn-sm abtn-secondary" type="submit"><%= m.is_read ? 'Mark unread' : 'Mark read' %></button>
+          </form>
+          <form method="post" action="/admin/messages/<%= m.id %>/delete" style="display:inline">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="abtn abtn-sm abtn-danger" type="submit" data-confirm="Delete this message?">Delete</button>
+          </form>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table></div>
+  <% } else { %><p class="empty-state">No messages yet.</p><% } %>
+</div>

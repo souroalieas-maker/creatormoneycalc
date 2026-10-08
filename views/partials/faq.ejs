@@ -1,0 +1,20 @@
+<% if (typeof faqs !== 'undefined' && faqs && faqs.length) { %>
+<section class="faq" aria-label="Frequently asked questions">
+  <h2 class="section-title">Frequently Asked Questions</h2>
+  <% faqs.forEach(function(f){ %>
+  <details>
+    <summary><%= f.q %></summary>
+    <div><%= f.a %></div>
+  </details>
+  <% }) %>
+</section>
+<script type="application/ld+json"><%- JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(function(f){ return {
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a }
+  }; })
+}).replace(/<\//g, '<\\/') %></script>
+<% } %>

@@ -1,0 +1,96 @@
+<div class="stat-cards">
+  <div class="stat-card">
+    <div class="stat-label">Total Visitors</div>
+    <div class="stat-value"><%= stats.totalVisitors.toLocaleString('en-US') %></div>
+    <div class="stat-sub">all time</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Visitors Today</div>
+    <div class="stat-value"><%= stats.visitorsToday.toLocaleString('en-US') %></div>
+    <div class="stat-sub">unique visits tracked</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Calculator Uses</div>
+    <div class="stat-value"><%= stats.calcUses.toLocaleString('en-US') %></div>
+    <div class="stat-sub">all time</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Blog Views</div>
+    <div class="stat-value"><%= stats.blogViews.toLocaleString('en-US') %></div>
+    <div class="stat-sub">all posts</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Estimated Ad Revenue</div>
+    <div class="stat-value"><%= stats.revenueFmt %></div>
+    <form method="post" action="/admin/dashboard/revenue" style="margin-top:10px">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="form-row" style="grid-template-columns:1fr auto;align-items:end">
+        <div class="form-group" style="margin-bottom:0">
+          <label for="ad_revenue_estimate" style="font-size:.8rem">Update estimate (USD)</label>
+          <input type="number" id="ad_revenue_estimate" name="ad_revenue_estimate" min="0" step="0.01" value="<%= stats.revenue %>">
+        </div>
+        <button class="abtn abtn-sm" type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-header"><h2>Traffic — last 14 days</h2></div>
+  <div class="chart"><canvas id="trafficChart" height="120"></canvas></div>
+</div>
+
+<div class="form-row cols-2">
+  <div class="panel">
+    <div class="panel-header"><h2>Top Pages (7 days)</h2></div>
+    <% if (topPages.length) { %>
+    <div class="table-wrap"><table class="admin-table">
+      <thead><tr><th>Page</th><th>Views</th></tr></thead>
+      <tbody>
+        <% topPages.forEach(function(p) { %>
+        <tr><td><%= p.path %></td><td><%= Number(p.views).toLocaleString('en-US') %></td></tr>
+        <% }); %>
+      </tbody>
+    </table></div>
+    <% } else { %><p class="empty-state">No page data yet.</p><% } %>
+  </div>
+  <div class="panel">
+    <div class="panel-header">
+      <h2>Unread Messages</h2>
+      <a class="abtn abtn-sm abtn-secondary" href="/admin/messages">View all (<%= unread %>)</a>
+    </div>
+    <% if (recentMessages.length) { %>
+    <div class="table-wrap"><table class="admin-table">
+      <thead><tr><th>From</th><th>Message</th><th>Date</th></tr></thead>
+      <tbody>
+        <% recentMessages.forEach(function(m) { %>
+        <tr>
+          <td><%= m.name %><br><span style="color:#64748b;font-size:.8rem"><%= m.email %></span></td>
+          <td><%= String(m.message).slice(0, 80) %><%= String(m.message).length > 80 ? '…' : '' %></td>
+          <td><%= m.created_at %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table></div>
+    <% } else { %><p class="empty-state">No unread messages.</p><% } %>
+  </div>
+</div>
+
+<script>
+(function () {
+  var el = document.getElementById('trafficChart');
+  if (!el || !window.Chart) return;
+  var data = <%- JSON.stringify(chart) %>;
+  new Chart(el, {
+    type: 'line',
+    data: {
+      labels: data.labels,
+      datasets: [
+        { label: 'Visitors', data: data.visitors, borderColor: '#2563eb', backgroundColor: 'rgba(37,99,235,.12)', fill: true, tension: .3 },
+        { label: 'Pageviews', data: data.pageviews, borderColor: '#0f172a', borderDash: [5, 4], fill: false, tension: .3 }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true } } }
+  });
+})();
+</script>

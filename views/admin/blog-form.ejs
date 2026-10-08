@@ -1,0 +1,55 @@
+<% if (error) { %><div class="flash flash-error" role="alert"><%= error %></div><% } %>
+<form method="post" action="<%= isNew ? '/admin/blog' : '/admin/blog/' + post.id %>">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <div class="panel">
+    <div class="form-row cols-2">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" value="<%= post.title %>" maxlength="200" required>
+      </div>
+      <div class="form-group">
+        <label for="slug">Slug</label>
+        <input type="text" id="slug" name="slug" value="<%= post.slug %>" maxlength="100">
+        <span class="help">Auto-generated from the title if left blank. Must be unique.</span>
+      </div>
+    </div>
+    <div class="form-row cols-2">
+      <div class="form-group">
+        <label for="category">Category</label>
+        <input type="text" id="category" name="category" value="<%= post.category %>" maxlength="100">
+      </div>
+      <div class="form-group">
+        <label for="tags">Tags</label>
+        <input type="text" id="tags" name="tags" value="<%= post.tags %>" maxlength="200" placeholder="comma, separated">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="image">Featured image URL</label>
+      <input type="url" id="image" name="image" value="<%= post.image %>" maxlength="500" placeholder="https://…">
+    </div>
+    <div class="form-row cols-2">
+      <div class="form-group">
+        <label for="seo_title">SEO title</label>
+        <input type="text" id="seo_title" name="seo_title" value="<%= post.seo_title %>" maxlength="200">
+      </div>
+      <div class="form-group">
+        <label for="meta_description">Meta description</label>
+        <input type="text" id="meta_description" name="meta_description" value="<%= post.meta_description %>" maxlength="300">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select id="status" name="status">
+        <option value="draft" <%= post.status === 'draft' ? 'selected' : '' %>>Draft</option>
+        <option value="published" <%= post.status === 'published' ? 'selected' : '' %>>Published</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="body_md">Content (Markdown)</label>
+      <textarea id="body_md" name="body_md" style="min-height:320px"><%= post.body_md %></textarea>
+      <div class="md-preview" id="md-preview" aria-label="Live preview"></div>
+    </div>
+  </div>
+  <button class="abtn" type="submit"><%= isNew ? 'Create Post' : 'Save Changes' %></button>
+  <a class="abtn abtn-secondary" href="/admin/blog">Cancel</a>
+</form>

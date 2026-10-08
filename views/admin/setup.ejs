@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Setup · CreatorMoneyCalc</title>
+<link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body>
+<div class="auth-wrap">
+  <div class="auth-card">
+    <h1>Create Admin Account</h1>
+    <p class="sub">First-run setup — create the administrator login for this site.</p>
+    <% if (error) { %><div class="flash flash-error" role="alert"><%= error %></div><% } %>
+    <form method="post" action="/admin/setup">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <% if (needsToken) { %>
+      <div class="form-group">
+        <label for="token">Setup Token</label>
+        <input type="password" id="token" name="token" required autocomplete="off">
+        <span class="help">Required by the ADMIN_SETUP_TOKEN environment variable.</span>
+      </div>
+      <% } %>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="<%= email %>" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required autocomplete="new-password" minlength="10">
+        <span class="help">At least 10 characters.</span>
+      </div>
+      <div class="form-group">
+        <label for="confirm">Confirm Password</label>
+        <input type="password" id="confirm" name="confirm" required autocomplete="new-password" minlength="10">
+      </div>
+      <button class="abtn" type="submit">Create Account</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

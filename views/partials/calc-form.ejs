@@ -1,0 +1,157 @@
+<%/*
+  Calculator forms — exact DOM contract for /assets/js/calc.js:
+  <form class="calc-form" data-calc="earnings|rpm|shorts|views-money|engagement" novalidate>
+  Expects local `calcKey`.
+*/
+  const _key = calcKey;
+  const _d = (calcs[_key] && calcs[_key].defaults) || {};
+  const _uid = function(n){ return n + '-' + _key; };
+  const _countries = ['United States','Canada','United Kingdom','Australia','Pakistan','India','Other'];
+  const _cr = ((_d.country_rpms || {})['United States']) || [3, 8];
+  const _shortsDefRpm = ((calcs.shorts && calcs.shorts.defaults) || {}).default_shorts_rpm || 0.07;
+  const _earnDefRpm = ((calcs.earnings && calcs.earnings.defaults) || {}).default_rpm || 4;
+%>
+<% if (_key === 'earnings') { %>
+<form class="calc-form" data-calc="earnings"
+      data-default-rpm="<%= _earnDefRpm %>"
+      data-default-shorts-rpm="<%= _shortsDefRpm %>" novalidate>
+  <div class="field">
+    <label for="<%= _uid('views') %>">Monthly views</label>
+    <input type="number" id="<%= _uid('views') %>" name="views" inputmode="decimal" min="0" step="any" placeholder="e.g. 100000" required>
+  </div>
+  <div class="field">
+    <label for="<%= _uid('rpm') %>" data-rpm-label>RPM (USD)</label>
+    <input type="number" id="<%= _uid('rpm') %>" name="rpm" inputmode="decimal" min="0" step="0.01" value="<%= _earnDefRpm %>" required>
+    <span class="hint">Typical long-form RPM: $3 &ndash; $8</span>
+  </div>
+  <div class="field">
+    <label for="<%= _uid('country') %>">Audience country</label>
+    <select id="<%= _uid('country') %>" name="country">
+      <% _countries.forEach(function(cn, i){ %>
+      <option value="<%= cn %>"<%= i === 0 ? ' selected' : '' %>><%= cn %></option>
+      <% }) %>
+    </select>
+    <span class="hint" id="<%= _uid('country-hint') %>" data-country-hint>Typical RPM range: $<%= _cr[0] %>&ndash;$<%= _cr[1] %></span>
+  </div>
+  <fieldset class="field">
+    <legend>Content type</legend>
+    <div class="radio-row">
+      <label><input type="radio" name="ctype" value="long" checked> Long-form video</label>
+      <label><input type="radio" name="ctype" value="shorts"> Shorts</label>
+    </div>
+  </fieldset>
+  <button class="btn btn-block" type="submit">Calculate Earnings</button>
+  <div class="calc-error" role="alert" hidden></div>
+  <%- include('ad', { location: 'before_result' }) %>
+  <div class="calc-results" hidden>
+    <div class="result-row"><span class="result-label">Estimated monthly earnings</span><span class="result-value" data-result="monthly">&ndash;</span></div>
+    <div class="result-row"><span class="result-label">Weekly</span><span class="result-value" data-result="weekly">&ndash;</span></div>
+    <div class="result-row"><span class="result-label">Daily</span><span class="result-value" data-result="daily">&ndash;</span></div>
+    <div class="result-row"><span class="result-label">Yearly</span><span class="result-value" data-result="yearly">&ndash;</span></div>
+    <p class="muted">Estimates only &mdash; real earnings depend on monetized views, niche, audience country and season.</p>
+  </div>
+  <%- include('ad', { location: 'after_result' }) %>
+</form>
+<% } else if (_key === 'rpm') { %>
+<form class="calc-form" data-calc="rpm" data-default-rpm="<%= _earnDefRpm %>" data-default-shorts-rpm="<%= _shortsDefRpm %>" novalidate>
+  <div class="field">
+    <label for="<%= _uid('revenue') %>">Estimated revenue (USD)</label>
+    <input type="number" id="<%= _uid('revenue') %>" name="revenue" inputmode="decimal" min="0" step="0.01" value="<%= _d.default_revenue || 120 %>" required>
+    <span class="hint">The revenue a video or channel earned, e.g. from YouTube Studio.</span>
+  </div>
+  <div class="field">
+    <label for="<%= _uid('views') %>">Total views</label>
+    <input type="number" id="<%= _uid('views') %>" name="views" inputmode="decimal" min="0" step="any" value="<%= _d.default_views || 30000 %>" required>
+  </div>
+  <button class="btn btn-block" type="submit">Calculate RPM</button>
+  <div class="calc-error" role="alert" hidden></div>
+  <%- include('ad', { location: 'before_result' }) %>
+  <div class="calc-results" hidden>
+    <div class="result-row"><span class="result-label">Your RPM</span><span class="result-value" data-result="rpm">&ndash;</span></div>
+    <p class="muted">Typical long-form RPM: $3&ndash;$8. Shorts RPM is usually $0.03&ndash;$0.10.</p>
+  </div>
+  <%- include('ad', { location: 'after_result' }) %>
+</form>
+<% } else if (_key === 'shorts') { %>
+<form class="calc-form" data-calc="shorts" data-default-rpm="<%= _earnDefRpm %>" data-default-shorts-rpm="<%= _shortsDefRpm %>" novalidate>
+  <div class="field">
+    <label for="<%= _uid('views') %>">Monthly Shorts views</label>
+    <input type="number" id="<%= _uid('views') %>" name="views" inputmode="decimal" min="0" step="any" placeholder="e.g. 1000000" required>
+  </div>
+  <div class="field">
+    <label for="<%= _uid('rpm') %>">Shorts RPM (USD)</label>
+    <input type="number" id="<%= _uid('rpm') %>" name="rpm" inputmode="decimal" min="0" step="0.01" value="<%= _d.default_shorts_rpm || 0.07 %>" required>
+    <span class="hint">Typical Shorts RPM: $0.03 &ndash; $0.10 (much lower than long-form).</span>
+  </div>
+  <button class="btn btn-block" type="submit">Calculate Shorts Earnings</button>
+  <div class="calc-error" role="alert" hidden></div>
+  <%- include('ad', { location: 'before_result' }) %>
+  <div class="calc-results" hidden>
+    <div class="result-row"><span class="result-label">Estimated monthly Shorts earnings</span><span class="result-value" data-result="monthly">&ndash;</span></div>
+    <div class="result-row"><span class="result-label">Weekly</span><span class="result-value" data-result="weekly">&ndash;</span></div>
+    <div class="result-row"><span class="result-label">Daily</span><span class="result-value" data-result="daily">&ndash;</span></div>
+    <div class="result-row"><span class="result-label">Yearly</span><span class="result-value" data-result="yearly">&ndash;</span></div>
+    <p class="muted">Shorts revenue comes from a shared ad pool &mdash; these are estimates, not guarantees.</p>
+  </div>
+  <%- include('ad', { location: 'after_result' }) %>
+</form>
+<% } else if (_key === 'views-money') { %>
+<form class="calc-form" data-calc="views-money" data-default-rpm="<%= _d.default_rpm || 4 %>" data-default-shorts-rpm="<%= _shortsDefRpm %>" novalidate>
+  <div class="field">
+    <label for="<%= _uid('views') %>">Your views (optional)</label>
+    <input type="number" id="<%= _uid('views') %>" name="views" inputmode="decimal" min="0" step="any" placeholder="e.g. 250000">
+    <span class="hint">Leave blank to just compare the standard milestones below.</span>
+  </div>
+  <div class="field">
+    <label for="<%= _uid('rpm') %>">RPM (USD)</label>
+    <input type="number" id="<%= _uid('rpm') %>" name="rpm" inputmode="decimal" min="0" step="0.01" value="<%= _d.default_rpm || 4 %>" required>
+  </div>
+  <button class="btn btn-block" type="submit">Calculate View Values</button>
+  <div class="calc-error" role="alert" hidden></div>
+  <%- include('ad', { location: 'before_result' }) %>
+  <div class="calc-results" hidden>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Views</th><th>Estimated earnings</th></tr></thead>
+        <tbody>
+          <tr><td>1,000</td><td data-tier="1000"><%= helpers.fmtUSD((1000/1000) * (_d.default_rpm || 4)) %></td></tr>
+          <tr><td>10,000</td><td data-tier="10000"><%= helpers.fmtUSD((10000/1000) * (_d.default_rpm || 4)) %></td></tr>
+          <tr><td>100,000</td><td data-tier="100000"><%= helpers.fmtUSD((100000/1000) * (_d.default_rpm || 4)) %></td></tr>
+          <tr><td>1,000,000</td><td data-tier="1000000"><%= helpers.fmtUSD((1000000/1000) * (_d.default_rpm || 4)) %></td></tr>
+          <tr><td>10,000,000</td><td data-tier="10000000"><%= helpers.fmtUSD((10000000/1000) * (_d.default_rpm || 4)) %></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted">Estimates only &mdash; change the RPM and submit again to compare scenarios.</p>
+  </div>
+  <%- include('ad', { location: 'after_result' }) %>
+</form>
+<% } else if (_key === 'engagement') { %>
+<form class="calc-form" data-calc="engagement" data-default-rpm="<%= _earnDefRpm %>" data-default-shorts-rpm="<%= _shortsDefRpm %>" novalidate>
+  <div class="field">
+    <label for="<%= _uid('views') %>">Views</label>
+    <input type="number" id="<%= _uid('views') %>" name="views" inputmode="decimal" min="0" step="any" placeholder="e.g. 100000" required>
+  </div>
+  <div class="field">
+    <label for="<%= _uid('likes') %>">Likes</label>
+    <input type="number" id="<%= _uid('likes') %>" name="likes" inputmode="decimal" min="0" step="any" placeholder="e.g. 4000" required>
+  </div>
+  <div class="field">
+    <label for="<%= _uid('comments') %>">Comments</label>
+    <input type="number" id="<%= _uid('comments') %>" name="comments" inputmode="decimal" min="0" step="any" placeholder="e.g. 500" required>
+  </div>
+  <div class="field">
+    <label for="<%= _uid('shares') %>">Shares</label>
+    <input type="number" id="<%= _uid('shares') %>" name="shares" inputmode="decimal" min="0" step="any" placeholder="e.g. 200" required>
+  </div>
+  <button class="btn btn-block" type="submit">Calculate Engagement</button>
+  <div class="calc-error" role="alert" hidden></div>
+  <%- include('ad', { location: 'before_result' }) %>
+  <div class="calc-results" hidden>
+    <div class="result-row"><span class="result-label">Engagement rate</span><span class="result-value" data-result="rate">&ndash;</span></div>
+    <div class="result-row"><span class="result-label">Rating</span><span class="result-value" data-result="rating">&ndash;</span></div>
+    <p class="muted">Rough guide: under 1% low &middot; 1&ndash;3% average &middot; 3&ndash;6% good &middot; above 6% excellent.</p>
+  </div>
+  <%- include('ad', { location: 'after_result' }) %>
+</form>
+<% } %>

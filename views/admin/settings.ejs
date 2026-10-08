@@ -1,0 +1,52 @@
+<form method="post" action="/admin/settings">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <div class="panel">
+    <div class="panel-header"><h2>General</h2></div>
+    <% fields.forEach(function(f) { var key = f[0]; var label = f[1]; var max = f[2]; %>
+      <% if (key === 'logo_url' || key === 'favicon_url') return; %>
+      <div class="form-group">
+        <label for="<%= key %>"><%= label %></label>
+        <% if (key === 'footer_text') { %>
+          <textarea id="<%= key %>" name="<%= key %>" maxlength="<%= max %>"><%= s[key] %></textarea>
+        <% } else { %>
+          <input type="<%= key === 'contact_email' ? 'email' : 'text' %>" id="<%= key %>" name="<%= key %>" value="<%= s[key] %>" maxlength="<%= max %>">
+        <% } %>
+      </div>
+    <% }); %>
+  </div>
+  <div class="panel">
+    <div class="panel-header"><h2>Logo &amp; Favicon</h2></div>
+    <div class="form-row cols-2">
+      <div class="form-group">
+        <label for="logo_url">Logo image URL</label>
+        <input type="url" id="logo_url" name="logo_url" value="<%= s['logo_url'] %>" maxlength="500" placeholder="https://…">
+        <% if (s['logo_url']) { %><div style="margin-top:8px"><img src="<%= s['logo_url'] %>" alt="Current logo" style="max-height:48px"></div><% } %>
+      </div>
+      <div class="form-group">
+        <label for="favicon_url">Favicon URL</label>
+        <input type="url" id="favicon_url" name="favicon_url" value="<%= s['favicon_url'] %>" maxlength="500" placeholder="https://…">
+        <% if (s['favicon_url']) { %><div style="margin-top:8px"><img src="<%= s['favicon_url'] %>" alt="Current favicon" style="max-height:32px"></div><% } %>
+      </div>
+    </div>
+    <span class="help">Paste an image URL above, or upload a file below (PNG/JPG/GIF/WebP/SVG/ICO, max 2MB).</span>
+  </div>
+  <button class="abtn" type="submit">Save Settings</button>
+</form>
+
+<div class="panel" style="margin-top:20px">
+  <div class="panel-header"><h2>Upload Images</h2></div>
+  <form method="post" action="/admin/settings/upload" enctype="multipart/form-data">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div class="form-row cols-2">
+      <div class="form-group">
+        <label for="logo_file">Logo file</label>
+        <input type="file" id="logo_file" name="logo_file" accept="image/*">
+      </div>
+      <div class="form-group">
+        <label for="favicon_file">Favicon file</label>
+        <input type="file" id="favicon_file" name="favicon_file" accept="image/*">
+      </div>
+    </div>
+    <button class="abtn abtn-secondary" type="submit">Upload</button>
+  </form>
+</div>

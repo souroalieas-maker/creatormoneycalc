@@ -1,0 +1,57 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+<main class="container">
+  <div class="blog-layout">
+    <div class="blog-main">
+      <article class="post">
+        <h1><%= post.title %></h1>
+        <p class="post-meta">
+          <% if (post.category) { %><%= post.category %> &middot; <% } %>
+          <%= helpers.escapeHtml(String(post.created_at).slice(0, 10)) %>
+          <% if (post.views) { %> &middot; <%= helpers.fmtNum(post.views) %> views<% } %>
+        </p>
+        <% if (post.image) { %>
+        <p><img src="<%= post.image %>" alt="<%= post.title %>" loading="lazy"></p>
+        <% } %>
+        <div class="post-body"><%- md(post.body_md) %></div>
+        <% if (post.tags) { %><p class="muted">Tags: <%= post.tags %></p><% } %>
+      </article>
+
+      <%- include('../partials/faq', { faqs: postFaqs }) %>
+
+      <section>
+        <h2 class="section-title">Try the Calculators</h2>
+        <div class="cards-grid">
+          <% calcNav.slice(0, 3).forEach(function(item){ %>
+          <div class="card">
+            <h3><a href="<%= item.path %>"><%= calcs[item.key].title %></a></h3>
+            <p><%= calcs[item.key].description %></p>
+            <a class="btn btn-secondary" href="<%= item.path %>">Open calculator</a>
+          </div>
+          <% }) %>
+        </div>
+      </section>
+
+      <nav aria-label="More articles">
+        <p>
+          <% if (prev) { %>&larr; <a href="/blog/<%= prev.slug %>"><%= prev.title %></a><% } %>
+          <% if (prev && next) { %><br><% } %>
+          <% if (next) { %><a href="/blog/<%= next.slug %>"><%= next.title %></a> &rarr;<% } %>
+        </p>
+        <p><a href="/blog">&larr; Back to all articles</a></p>
+      </nav>
+    </div>
+    <aside class="blog-sidebar">
+      <div class="widget">
+        <h3>Calculators</h3>
+        <ul>
+          <% calcNav.forEach(function(item){ %>
+          <li><a href="<%= item.path %>"><%= calcs[item.key].title %></a></li>
+          <% }) %>
+        </ul>
+      </div>
+      <%- include('../partials/ad', { location: 'blog_content' }) %>
+    </aside>
+  </div>
+</main>
+<%- include('../partials/footer') %>

@@ -1,0 +1,36 @@
+<div class="panel">
+  <div class="panel-header">
+    <h2>All Posts</h2>
+    <a class="abtn abtn-sm" href="/admin/blog/new">+ New Post</a>
+  </div>
+  <% if (posts.length) { %>
+  <div class="table-wrap"><table class="admin-table">
+    <thead><tr><th>Title</th><th>Slug</th><th>Status</th><th>Views</th><th>Updated</th><th style="text-align:right">Actions</th></tr></thead>
+    <tbody>
+      <% posts.forEach(function(p) { %>
+      <tr>
+        <td><strong><%= p.title %></strong></td>
+        <td><code>/<%= p.slug %></code></td>
+        <td>
+          <% if (p.status === 'published') { %><span class="badge badge-green">published</span>
+          <% } else { %><span class="badge badge-gray">draft</span><% } %>
+        </td>
+        <td><%= Number(p.views).toLocaleString('en-US') %></td>
+        <td><%= p.updated_at %></td>
+        <td class="table-actions">
+          <a class="abtn abtn-sm abtn-secondary" href="/admin/blog/<%= p.id %>/edit">Edit</a>
+          <form method="post" action="/admin/blog/<%= p.id %>/toggle" style="display:inline">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="abtn abtn-sm abtn-secondary" type="submit"><%= p.status === 'published' ? 'Unpublish' : 'Publish' %></button>
+          </form>
+          <form method="post" action="/admin/blog/<%= p.id %>/delete" style="display:inline">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="abtn abtn-sm abtn-danger" type="submit" data-confirm="Delete this post permanently?">Delete</button>
+          </form>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table></div>
+  <% } else { %><p class="empty-state">No posts yet. Create your first post.</p><% } %>
+</div>

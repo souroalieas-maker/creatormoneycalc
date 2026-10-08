@@ -1,0 +1,60 @@
+<%/*
+  Shared calculator page layout. Expects locals: calcKey, pageFaqs,
+  pageExamples, pageFormula, pageFormulaNote (from routes/public.js).
+*/
+  const _c = calcs[calcKey];
+  const _related = calcNav.filter(function(item){ return item.key !== calcKey; });
+%>
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+<main class="container">
+  <h1 class="section-title"><%= _c.title %></h1>
+  <p><%= _c.description %></p>
+
+  <% if (!_c.enabled) { %>
+    <div class="disclaimer-box">
+      <strong>This calculator is temporarily unavailable.</strong>
+      We are working on it — please check back soon, or try one of our other calculators below.
+    </div>
+  <% } else { %>
+    <div class="calc-card">
+      <%- include('../partials/ad', { location: 'calculator' }) %>
+      <%- include('../partials/calc-form', { calcKey: calcKey }) %>
+    </div>
+
+    <section>
+      <h2 class="section-title">The Formula</h2>
+      <p><code><%= pageFormula %></code></p>
+      <p><%= pageFormulaNote %></p>
+    </section>
+
+    <section>
+      <h2 class="section-title">Worked Examples</h2>
+      <ul>
+        <% pageExamples.forEach(function(ex){ %>
+        <li><%= ex %></li>
+        <% }) %>
+      </ul>
+    </section>
+
+    <%- include('../partials/faq', { faqs: pageFaqs }) %>
+  <% } %>
+
+  <section>
+    <h2 class="section-title">Related Calculators</h2>
+    <div class="cards-grid">
+      <% _related.forEach(function(item){ %>
+      <div class="card">
+        <h3><a href="<%= item.path %>"><%= calcs[item.key].title %></a></h3>
+        <p><%= calcs[item.key].description %></p>
+        <a class="btn btn-secondary" href="<%= item.path %>">Open calculator</a>
+      </div>
+      <% }) %>
+    </div>
+  </section>
+
+  <div class="disclaimer-box">
+    <strong>Estimates only.</strong> Calculator results are for educational purposes and are not a promise or guarantee of income. Actual YouTube revenue varies with RPM, monetized views, audience, niche and ad demand.
+  </div>
+</main>
+<%- include('../partials/footer') %>

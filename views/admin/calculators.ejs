@@ -1,0 +1,84 @@
+<% if (error) { %><div class="flash flash-error" role="alert"><%= error %></div><% } %>
+<form method="post" action="/admin/calculators">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+  <% keys.forEach(function(key) { var c = calcs[key]; if (!c) return; var p = key + '_'; var d = c.defaults || {}; %>
+  <div class="panel">
+    <div class="panel-header">
+      <h2><%= c.title %></h2>
+      <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer">
+        <input type="checkbox" name="<%= p %>enabled" value="1" <%= c.enabled ? 'checked' : '' %> style="width:20px;height:20px">
+        Enabled
+      </label>
+    </div>
+    <div class="form-row cols-2">
+      <div class="form-group">
+        <label for="<%= p %>title">Title</label>
+        <input type="text" id="<%= p %>title" name="<%= p %>title" value="<%= c.title %>" maxlength="200">
+      </div>
+      <div class="form-group">
+        <label for="<%= p %>description">Description</label>
+        <input type="text" id="<%= p %>description" name="<%= p %>description" value="<%= c.description %>" maxlength="2000">
+      </div>
+    </div>
+
+    <% if (key === 'earnings') { %>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label for="<%= p %>default_rpm">Default RPM (USD)</label>
+          <input type="number" id="<%= p %>default_rpm" name="<%= p %>default_rpm" step="0.01" min="0" value="<%= d.default_rpm %>">
+        </div>
+      </div>
+      <h3 style="margin:8px 0 12px;font-size:1rem">Country RPM ranges <span style="font-weight:400;color:#64748b">(low-high)</span></h3>
+      <div class="form-row cols-2">
+        <% Object.keys(d.country_rpms || {}).forEach(function(country) { var pair = d.country_rpms[country]; %>
+        <div class="form-group">
+          <label for="<%= p %>rpm_<%= country %>"><%= country %></label>
+          <input type="text" id="<%= p %>rpm_<%= country %>" name="<%= p %>rpm_<%= country %>" value="<%= pair[0] %>-<%= pair[1] %>" placeholder="3-8">
+        </div>
+        <% }); %>
+      </div>
+    <% } else if (key === 'shorts') { %>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label for="<%= p %>default_shorts_rpm">Default Shorts RPM (USD)</label>
+          <input type="number" id="<%= p %>default_shorts_rpm" name="<%= p %>default_shorts_rpm" step="0.001" min="0" value="<%= d.default_shorts_rpm %>">
+        </div>
+        <div class="form-group">
+          <label for="<%= p %>shorts_rpm_hint">RPM hint text</label>
+          <input type="text" id="<%= p %>shorts_rpm_hint" name="<%= p %>shorts_rpm_hint" value="<%= d.shorts_rpm_hint || '' %>" maxlength="100">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="<%= p %>note">Note shown under the calculator</label>
+        <textarea id="<%= p %>note" name="<%= p %>note" maxlength="2000"><%= d.note || '' %></textarea>
+      </div>
+    <% } else if (key === 'rpm') { %>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label for="<%= p %>default_revenue">Default revenue (USD)</label>
+          <input type="number" id="<%= p %>default_revenue" name="<%= p %>default_revenue" step="0.01" min="0" value="<%= d.default_revenue %>">
+        </div>
+        <div class="form-group">
+          <label for="<%= p %>default_views">Default views</label>
+          <input type="number" id="<%= p %>default_views" name="<%= p %>default_views" step="1" min="0" value="<%= d.default_views %>">
+        </div>
+      </div>
+    <% } else if (key === 'views-money') { %>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label for="<%= p %>default_rpm">Default RPM (USD)</label>
+          <input type="number" id="<%= p %>default_rpm" name="<%= p %>default_rpm" step="0.01" min="0" value="<%= d.default_rpm %>">
+        </div>
+      </div>
+    <% } else if (key === 'engagement') { %>
+      <div class="form-group">
+        <label for="<%= p %>guide">Engagement guide text</label>
+        <textarea id="<%= p %>guide" name="<%= p %>guide" maxlength="2000"><%= d.guide || '' %></textarea>
+      </div>
+    <% } %>
+  </div>
+  <% }); %>
+
+  <button class="abtn" type="submit">Save Changes</button>
+</form>

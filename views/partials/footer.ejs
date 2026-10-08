@@ -1,0 +1,40 @@
+<footer class="site-footer">
+  <div class="container">
+    <%- include('ad', { location: 'footer' }) %>
+    <div class="footer-grid">
+      <div>
+        <h4><%= site.site_name %></h4>
+        <p><%= site.footer_text %></p>
+        <% if (site.tagline) { %><p><%= site.tagline %></p><% } %>
+      </div>
+      <div>
+        <h4>Calculators</h4>
+        <ul>
+          <% calcNav.forEach(function(item){ %>
+          <li><a href="<%= item.path %>"><%= calcs[item.key].title %></a></li>
+          <% }) %>
+        </ul>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/calculators">All Calculators</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/privacy-policy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Service</a></li>
+          <li><a href="/disclaimer">Disclaimer</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 <%= site.site_name %>. All rights reserved.</span>
+      <span>Estimates are for educational purposes only — not financial advice.</span>
+    </div>
+  </div>
+</footer>
+<script src="/assets/js/calc.js" defer></script>
+</body>
+</html>

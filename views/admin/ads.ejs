@@ -1,0 +1,27 @@
+<% if (error) { %><div class="flash flash-error" role="alert"><%= error %></div><% } %>
+<p style="color:#64748b;max-width:720px">Paste your ad network code for each placement. Desktop code is used on wide screens, mobile code on small screens. Disabled slots show a subtle "Advertisement" placeholder on the public site.</p>
+<form method="post" action="/admin/ads">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <% locations.forEach(function(pair) { var loc = pair[0]; var label = pair[1]; var s = slots[loc] || {}; var p = 'ads_' + loc + '_'; %>
+  <div class="panel">
+    <div class="panel-header">
+      <h2><%= label %> <code style="font-size:.8rem;color:#64748b"><%= loc %></code></h2>
+      <label style="display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer">
+        <input type="checkbox" name="<%= p %>enabled" value="1" <%= s.enabled ? 'checked' : '' %> style="width:20px;height:20px">
+        Enabled
+      </label>
+    </div>
+    <div class="form-row cols-2">
+      <div class="form-group">
+        <label for="<%= p %>desktop">Desktop ad code</label>
+        <textarea id="<%= p %>desktop" name="<%= p %>desktop" style="min-height:120px;font-family:ui-monospace,Menlo,monospace;font-size:.85rem" maxlength="20000"><%= s.desktop_code || '' %></textarea>
+      </div>
+      <div class="form-group">
+        <label for="<%= p %>mobile">Mobile ad code</label>
+        <textarea id="<%= p %>mobile" name="<%= p %>mobile" style="min-height:120px;font-family:ui-monospace,Menlo,monospace;font-size:.85rem" maxlength="20000"><%= s.mobile_code || '' %></textarea>
+      </div>
+    </div>
+  </div>
+  <% }); %>
+  <button class="abtn" type="submit">Save Ad Slots</button>
+</form>

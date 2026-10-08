@@ -1,0 +1,19 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+<main class="container">
+  <h1 class="section-title">YouTube Calculators</h1>
+  <p>Free tools for YouTube creators: estimate earnings, find your RPM, value your views and measure audience engagement. No sign-up, no cost.</p>
+  <div class="cards-grid">
+    <% calcNav.forEach(function(item){ %>
+    <div class="card">
+      <h3><a href="<%= item.path %>"><%= calcs[item.key].title %></a></h3>
+      <p><%= calcs[item.key].description %></p>
+      <a class="btn btn-secondary" href="<%= item.path %>">Open calculator</a>
+    </div>
+    <% }) %>
+  </div>
+  <div class="disclaimer-box">
+    <strong>Estimates only.</strong> All calculator results are for educational purposes and are not a promise or guarantee of income.
+  </div>
+</main>
+<%- include('../partials/footer') %>
