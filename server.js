@@ -105,6 +105,7 @@ app.use(async (req, res, next) => {
 });
 
 require('./routes/public')(app);
+require('./routes/tools')(app);
 require('./routes/admin')(app);
 
 /* 404 — friendly page, no stack traces. */

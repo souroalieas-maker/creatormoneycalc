@@ -1,0 +1,50 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<section class="tool-hero">
+  <div class="container">
+    <div class="crumb"><a href="/">Home</a> &rsaquo; YouTube Tools</div>
+    <h1>Free YouTube SEO &amp; Growth Tools</h1>
+    <p>Professional-grade tools for YouTubers: SEO descriptions, tags, titles, hashtags, keywords, thumbnails and channel research — free, no sign-up, works on mobile.</p>
+  </div>
+</section>
+
+<main class="container">
+  <div class="tools-filter">
+    <input type="search" id="toolSearch" class="input" placeholder="Search tools… (e.g. tags, thumbnail, description)" aria-label="Search tools">
+  </div>
+
+  <div class="tools-grid" id="toolsGrid">
+    <% tools.forEach(function(t){ %>
+    <a class="tool-card" href="<%= t.path || ('/tools/' + t.slug) %>" data-name="<%= (t.name + ' ' + t.desc).toLowerCase() %>">
+      <% if (t.badge) { %><span class="<%= t.badge === 'HOT' ? 'badge-hot' : 'badge-pro' %>"><%= t.badge %></span><% } %>
+      <div class="tool-icon"><%= t.icon %></div>
+      <h3><%= t.name %></h3>
+      <p><%= t.desc %></p>
+      <span class="tool-go">Open tool &rarr;</span>
+    </a>
+    <% }) %>
+  </div>
+
+  <div class="pro-tip">
+    <strong>Pro tip:</strong> the best workflow is <a href="/tools/keyword-suggestion">Keyword Suggestion</a> &rarr;
+    <a href="/tools/ai-title-generator">Title Generator</a> &rarr;
+    <a href="/tools/seo-description-generator">SEO Description Generator</a> &rarr;
+    <a href="/tools/ai-tags-generator">Tags Generator</a>. Research, title, describe, tag — done in 5 minutes.
+  </div>
+</main>
+
+<script>
+(function () {
+  var input = document.getElementById('toolSearch');
+  var cards = Array.prototype.slice.call(document.querySelectorAll('#toolsGrid .tool-card'));
+  input.addEventListener('input', function () {
+    var q = input.value.trim().toLowerCase();
+    cards.forEach(function (c) {
+      c.style.display = (!q || c.getAttribute('data-name').indexOf(q) !== -1) ? '' : 'none';
+    });
+  });
+})();
+</script>
+
+<%- include('../partials/footer') %>

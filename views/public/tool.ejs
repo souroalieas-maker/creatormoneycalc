@@ -1,0 +1,74 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+
+<section class="tool-hero">
+  <div class="container">
+    <div class="crumb"><a href="/">Home</a> &rsaquo; <a href="/tools">YouTube Tools</a> &rsaquo; <%= tool.name %></div>
+    <div class="tool-icon-lg"><%= tool.icon %></div>
+    <h1><%= tool.h1 %></h1>
+    <p><%= tool.desc %></p>
+  </div>
+</section>
+
+<main class="container">
+  <div class="tool-panel" data-tool="<%= tool.slug %>">
+    <% tool.fields.forEach(function(f){ %>
+    <div class="field">
+      <label for="f_<%= f.name %>"><%= f.label %><% if (f.hint) { %> <span class="hint">— <%= f.hint %></span><% } %></label>
+      <% if (f.type === 'textarea') { %>
+        <textarea class="textarea" id="f_<%= f.name %>" name="<%= f.name %>" placeholder="<%= f.placeholder || '' %>" rows="3"></textarea>
+      <% } else if (f.type === 'select') { %>
+        <select class="select" id="f_<%= f.name %>" name="<%= f.name %>">
+          <% f.options.forEach(function(o){ %>
+          <option value="<%= o.value %>"><%= o.label %></option>
+          <% }) %>
+        </select>
+      <% } else { %>
+        <input class="input" type="<%= f.type || 'text' %>" id="f_<%= f.name %>" name="<%= f.name %>" placeholder="<%= f.placeholder || '' %>" autocomplete="off">
+      <% } %>
+    </div>
+    <% }) %>
+    <div class="btn-row">
+      <button type="button" class="btn btn-lg" data-action="run"><%= tool.buttonLabel || 'Generate' %></button>
+      <span class="hint muted" data-role="status"></span>
+    </div>
+
+    <div class="result-card" data-role="result">
+      <h3 data-role="resultTitle">Result</h3>
+      <div class="result-actions" data-role="actions"></div>
+      <div data-role="body"></div>
+    </div>
+  </div>
+
+  <% if (tool.howItWorks) { %>
+  <section>
+    <h2 class="section-title">How it works</h2>
+    <ol>
+      <% tool.howItWorks.forEach(function(s){ %><li><%= s %></li><% }) %>
+    </ol>
+  </section>
+  <% } %>
+
+  <% if (tool.proTip) { %>
+  <div class="pro-tip"><strong>Pro tip:</strong> <%- tool.proTip %></div>
+  <% } %>
+
+  <section>
+    <h2 class="section-title">More free YouTube tools</h2>
+    <div class="tools-grid">
+      <% relatedTools.forEach(function(t){ %>
+      <a class="tool-card" href="/tools/<%= t.slug %>">
+        <div class="tool-icon"><%= t.icon %></div>
+        <h3><%= t.name %></h3>
+        <p><%= t.desc %></p>
+        <span class="tool-go">Open tool &rarr;</span>
+      </a>
+      <% }) %>
+    </div>
+  </section>
+
+  <%- include('../partials/faq', { faqs: tool.faqs }) %>
+</main>
+
+<script src="/assets/js/yt-tools.js" defer></script>
+<%- include('../partials/footer') %>

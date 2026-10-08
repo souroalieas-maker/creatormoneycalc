@@ -6,6 +6,7 @@
 const { db } = require('../lib/db');
 const { md } = require('../lib/md');
 const helpers = require('../lib/helpers');
+const { TOOLS } = require('./tools');
 
 const CALC_IDS = ['earnings', 'rpm', 'shorts', 'views-money', 'engagement', 'tiktok', 'facebook'];
 
@@ -377,8 +378,10 @@ function registerPublic(app) {
   app.get('/sitemap.xml', async (req, res) => {
     const base = baseUrl();
     const today = helpers.todayStr();
+    const toolPaths = ['/tools', ...TOOLS.map((t) => t.path || ('/tools/' + t.slug))];
     const staticPaths = ['/', '/calculators',
       ...CALC_IDS.map((k) => CALC_PAGES[k].path),
+      ...toolPaths,
       '/blog', '/about', '/contact', '/privacy-policy', '/terms', '/disclaimer'];
     const posts = await db.prepare("SELECT slug FROM blog_posts WHERE status = 'published'").all();
     const urls = [
