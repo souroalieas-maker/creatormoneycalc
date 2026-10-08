@@ -133,7 +133,10 @@ var NICHES = [
     learn: ['the exact products used (with alternatives)', 'step-by-step application technique', 'mistakes that ruin the final look'] },
   { id: 'motivation', name: 'Motivation', match: ['motivation', 'motivational', 'success', 'mindset', 'self improvement', 'discipline', 'habits'],
     tags: ['motivation', 'motivational video', 'success', 'mindset'], hashtags: ['#Motivation', '#Success', '#Mindset'],
-    learn: ['the mindset shift that changes everything', 'daily habits of highly successful people', 'how to stay consistent when motivation fades'] }
+    learn: ['the mindset shift that changes everything', 'daily habits of highly successful people', 'how to stay consistent when motivation fades'] },
+  { id: 'movies', name: 'Movies & Entertainment', match: ['movie', 'film', 'cinema', 'netflix', 'hollywood', 'bollywood', 'drama', 'series', 'trailer', 'web series'],
+    tags: ['movie', 'film', 'movie review', 'new movie', 'film review'], hashtags: ['#Movies', '#MovieReview', '#Film', '#Cinema'],
+    learn: ['the full story without spoilers', 'hidden details most viewers missed', 'whether it is worth your time'] }
 ];
 function detectNiche(topic) {
   var t = ' ' + topic.toLowerCase() + ' ';
@@ -323,6 +326,96 @@ function genDescription(topic, style, channel) {
   return { text: lines.join('\n'), titles: genTitles(t).slice(0, 3), hashtags: hashtags, tags: tags };
 }
 
+/* ---------------- video/channel analyzer ---------------- */
+function coreTopicFromTitle(title) {
+  var t = String(title || '');
+  t = t.replace(/[\(\[].*?[\)\]]/g, ' ')          // strip (brackets)
+       .replace(/20\d{2}/g, ' ')                        // strip year
+       .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, ' ')  // strip emojis
+       .replace(/please (watch|subscribe)|like and subscribe|sub ?4 ?sub/gi, ' ')
+       .replace(/\s+/g, ' ').trim()
+       .replace(/^(i tried|i tested|i spent \d+ days?|i built|i made)\s+/i, '')
+       .replace(/\s+for \d+ days?$/i, '')
+       .replace(/\s+(and )?subscribe$/i, '')
+       .replace(/^(the|a|an)\s+/i, '');
+  return t || title;
+}
+function hasRepeat(t) {
+  var w = String(t || '').toLowerCase().split(' '), seen = {};
+  for (var i = 0; i < w.length - 1; i++) {
+    var b = w[i] + ' ' + w[i + 1];
+    if (seen[b]) return true;
+    seen[b] = 1;
+  }
+  return false;
+}
+function tooSimilar(gen, orig) {
+  var o = ' ' + String(orig || '').toLowerCase() + ' ';
+  var w = String(gen || '').toLowerCase().split(' ');
+  for (var i = 0; i < w.length - 2; i++) {
+    if (o.indexOf(' ' + w[i] + ' ' + w[i+1] + ' ' + w[i+2] + ' ') !== -1) return true;
+  }
+  return false;
+}
+function keywordsFromTitle(title) {
+  var stop = ['new','video','please','watch','the','and','for','vlog','part','my','this','that','with','your','you','are','was'];
+  var freq = {};
+  String(title || '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(' ').forEach(function (w) {
+    if (w.length > 3 && stop.indexOf(w) === -1) freq[w] = (freq[w] || 0) + 1;
+  });
+  return Object.keys(freq).sort(function (a, b) { return freq[b] - freq[a]; }).slice(0, 4);
+}
+/* ---------------- video/channel analyzer ---------------- */
+function analyzeTitle(title) {
+  var t = String(title || '').trim();
+  var issues = [], score = 100;
+  function add(sev, text, pts) {
+    issues.push({ sev: sev, text: text });
+    if (pts) score -= pts;
+  }
+  if (!t) return { score: 0, issues: [{ sev: 'bad', text: 'No title found.' }] };
+  // length
+  if (t.length > 60) add('bad', 'Title is ' + t.length + ' characters — YouTube cuts titles after ~60 chars in search. Move your main keyword to the very front.', 10);
+  else if (t.length < 30) add('warn', 'Title is short (' + t.length + ' chars). Keyword-rich titles of 40–60 chars rank better.', 8);
+  else add('good', 'Title length is ideal (' + t.length + ' characters).', 0);
+  // caps
+  var caps = t.split(' ').filter(function (w) { return w.length > 3 && /[A-Z]/.test(w) && w === w.toUpperCase(); });
+  if (caps.length >= 2) add('bad', 'Too many ALL-CAPS words (' + caps.slice(0, 3).join(', ') + ') — looks spammy and hurts trust.', 8);
+  else if (caps.length === 1) add('warn', 'One ALL-CAPS word is okay for emphasis — do not add more.', 2);
+  // number
+  if (/\d/.test(t)) add('good', 'Contains a number — numbers lift click-through rate.', 0);
+  else add('warn', 'No number in the title. "7 tips" or "2026" style numbers usually lift clicks.', 5);
+  // power words
+  var pw = ['ultimate', 'proven', 'secret', 'shocking', 'mistakes', 'free', 'best', 'new', 'how', 'why', 'stop', 'truth', 'amazing', 'easy', 'fast', 'complete', 'guide', 'never', 'always'];
+  var found = pw.filter(function (w) { return t.toLowerCase().indexOf(w) !== -1; });
+  if (found.length) add('good', 'Power word detected ("' + found[0] + '") — good for curiosity and clicks.', 0);
+  else add('warn', 'No power/emotion word. Words like "proven", "secret" or "mistakes" increase clicks.', 5);
+  // brackets
+  if (/[\(\[].*?[\)\]]/.test(t)) add('good', 'Brackets used — great for bonus info and CTR.', 0);
+  else add('tip', 'Tip: add brackets like "(2026 Guide)" — they consistently boost clicks.', 3);
+  // year = freshness
+  if (/20\d{2}/.test(t)) add('good', 'Contains a year — signals fresh, relevant content.', 0);
+  // curiosity hook
+  if (/\?|…|\.\.\.|—|!/.test(t)) add('good', 'Curiosity/emotion punctuation present — good hook.', 0);
+  else add('tip', 'Tip: a question or "…" curiosity gap can lift clicks.', 2);
+  // begging / spam phrases
+  if (/please (watch|subscribe)|sub ?4 ?sub|like and subscribe/i.test(t))
+    add('bad', 'Begging phrases like "please subscribe" in the title scream desperation and kill clicks. Put the CTA in the video, not the title.', 15);
+  // generic titles with no real topic
+  var meaningful = t.toLowerCase().replace(/[^a-z0-9 ]/g, '').split(' ').filter(function (w) {
+    return w.length > 2 && ['new', 'video', 'please', 'watch', 'the', 'and', 'for', 'vlog', 'part'].indexOf(w) === -1;
+  });
+  if (meaningful.length < 2)
+    add('bad', 'Title has no clear topic/keyword — YouTube cannot rank what it cannot understand. Name the actual subject.', 12);
+  // entire title in caps
+  if (t.length > 10 && t === t.toUpperCase() && /[A-Z]/.test(t))
+    add('bad', 'Entire title is in ALL CAPS — this looks like spam and suppresses clicks.', 7);
+  score = Math.max(5, Math.min(100, score));
+  return { score: score, issues: issues };
+}
+function scoreColor(s) { return s >= 80 ? '#16a34a' : (s >= 55 ? '#f59e0b' : '#dc2626'); }
+function scoreLabel(s) { return s >= 80 ? 'Excellent' : (s >= 55 ? 'Needs work' : 'Critical issues'); }
+
 /* ---------------- tool runners ---------------- */
 function needTopic(panel) {
   var v = getVals(panel);
@@ -467,7 +560,8 @@ var runners = {
       education: ['#ExamPrep', '#OnlineLearning', '#ScienceExplained'],
       music: ['#Remix', '#Lyrics', '#CoverSong'],
       beauty: ['#MakeupTutorial', '#Fashion', '#GlowUp'],
-      motivation: ['#NeverGiveUp', '#Discipline', '#Habits']
+      motivation: ['#NeverGiveUp', '#Discipline', '#Habits'],
+      movies: ['#Hollywood', '#Bollywood', '#Netflix', '#MovieNight', '#Trailer', '#CinemaLovers']
     };
     var tags = uniq(((niche && niche.hashtags) || []).concat(extra[v.niche] || []).concat(['#Shorts', '#YouTubeShorts']));
     showResult(panel, {
@@ -553,6 +647,99 @@ var runners = {
       })
       .catch(function () { setStatus(panel, 'Network error — please try again.'); });
   },
+  'video-analyzer': function (panel) {
+    var v = getVals(panel);
+    var url = cleanTopic(v.url);
+    if (!url) { setStatus(panel, 'Please paste a YouTube link first.'); return; }
+    var id = videoIdFromUrl(url);
+    if (id) {
+      setStatus(panel, 'Analyzing video…', true);
+      fetch('/api/yt-meta?url=' + encodeURIComponent(url))
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          setStatus(panel, '');
+          if (!d.ok || !d.title) {
+            showResult(panel, { title: 'Could not read video', html: '<p class="muted">YouTube blocked the lookup. Check the URL and try again.</p>' });
+            return;
+          }
+          var a = analyzeTitle(d.title);
+          var sevIcon = { good: '✅', warn: '⚠️', bad: '🔴', tip: '💡' };
+          var circ = 2 * Math.PI * 52;
+          var gauge = '<div class="score-gauge"><svg viewBox="0 0 120 120">' +
+            '<circle cx="60" cy="60" r="52" class="gauge-bg"/>' +
+            '<circle cx="60" cy="60" r="52" class="gauge-fg" style="stroke:' + scoreColor(a.score) + ';stroke-dasharray:' + (circ * a.score / 100).toFixed(1) + ' ' + circ.toFixed(1) + '"/>' +
+            '</svg><div class="gauge-num"><b style="color:' + scoreColor(a.score) + '">' + a.score + '</b><span>' + scoreLabel(a.score) + '</span></div></div>';
+          var html = '<div class="audit-top">' + gauge +
+            '<div class="audit-meta"><p><strong>Analyzing:</strong><br>' + esc(d.title) + '</p>' +
+            (d.author ? '<p><strong>Channel:</strong> ' + esc(d.author) + '</p>' : '') + '</div></div>' +
+            '<h3 style="margin-top:16px">🔍 Issues found (' + a.issues.filter(function (x) { return x.sev !== 'good'; }).length + ')</h3><ul class="result-list">' +
+            a.issues.map(function (it) { return '<li>' + sevIcon[it.sev] + ' ' + esc(it.text) + '</li>'; }).join('') + '</ul>';
+          // rewritten titles — the "special" part
+          var core = coreTopicFromTitle(d.title);
+          var fixed = genTitles(core, 'youtube').filter(function (t) { return t.toLowerCase() !== String(d.title).toLowerCase() && !hasRepeat(t); }).slice(0, 3);
+          html += '<h3 style="margin-top:16px">✨ Rewritten for you — better titles</h3><ol class="result-list">' +
+            fixed.map(function (t) { return '<li><strong>' + esc(t) + '</strong></li>'; }).join('') + '</ol>';
+          // keyword targeting
+          var kws = keywordsFromTitle(d.title);
+          html += '<h3 style="margin-top:16px">🎯 Keywords your title targets</h3>' + chipsHtml(kws) +
+            '<div data-role="moresugs"><div class="char-count">Fetching more keywords to target…</div></div>';
+          var ideas = genTitles(d.title, 'youtube').slice(0, 6);
+          html += '<h3 style="margin-top:16px">🎬 Next video ideas for this channel</h3><ol class="result-list">' +
+            ideas.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ol>' +
+            '<div class="pro-tip" style="margin:12px 0 0"><strong>Pro tip:</strong> run your next title through this analyzer <em>before</em> publishing — 30 seconds can save a video.</div>';
+          var reportText = function () {
+            return 'VIDEO SEO AUDIT — ' + d.title + '\nScore: ' + a.score + '/100 (' + scoreLabel(a.score) + ')\n\nISSUES:\n' +
+              a.issues.map(function (it) { return '- [' + it.sev + '] ' + it.text; }).join('\n') +
+              '\n\nREWRITTEN TITLES:\n' + fixed.map(function (t, i) { return (i + 1) + '. ' + t; }).join('\n') +
+              '\n\nNEXT VIDEO IDEAS:\n' + ideas.map(function (t, i) { return (i + 1) + '. ' + t; }).join('\n');
+          };
+          showResult(panel, {
+            title: 'Video SEO audit complete',
+            html: html,
+            actions: [
+              { label: 'Copy full audit report', text: reportText },
+              { label: 'Copy rewritten titles', text: function () { return fixed.join('\n'); } }
+            ]
+          });
+          // live extra keyword suggestions for the main keyword
+          if (kws.length) {
+            fetch('/api/yt-suggest?q=' + encodeURIComponent(kws[0]))
+              .then(function (r) { return r.json(); })
+              .then(function (sd) {
+                var box = $('[data-role="moresugs"]', panel);
+                if (!box) return;
+                if (sd.ok && sd.suggestions.length) {
+                  box.innerHTML = '<p style="margin:10px 0 4px"><strong>Also target these live searches:</strong></p>' + chipsHtml(sd.suggestions.slice(0, 8));
+                } else box.innerHTML = '';
+              }).catch(function () {});
+          }
+        })
+        .catch(function () { setStatus(panel, 'Network error — please try again.'); });
+    } else {
+      // channel mode: offline audit
+      var nicheName = (v.niche && v.niche !== 'general') ? v.niche : 'your niche';
+      var checks = [
+        ['🔴', '<strong>Niche clarity:</strong> can a new visitor tell what your channel is about in 3 seconds? If not, rewrite your channel description with your main keywords.'],
+        ['🔴', '<strong>Upload consistency:</strong> YouTube promotes predictable channels. Aim for at least 1 video per week — same day if possible.'],
+        ['⚠️', '<strong>Packaging:</strong> run your last 5 titles through the video analyzer above. Weak titles = invisible videos, no matter how good the content.'],
+        ['⚠️', '<strong>Playlists:</strong> group videos into keyword-rich playlists — they rank in search and boost session time.'],
+        ['💡', '<strong>Channel trailer:</strong> pin a 30–60 second trailer telling new visitors what they get and why to subscribe.'],
+        ['💡', '<strong>About section:</strong> pack it with niche keywords — it helps channel-level search discovery.']
+      ];
+      var ideas = genTitles(nicheName === 'your niche' ? 'youtube growth' : nicheName, 'youtube').slice(0, 6);
+      var html = '<div class="stat-row"><div class="stat"><b>Channel Audit</b><span>6-point health checklist</span></div></div>' +
+        '<div class="pro-tip"><strong>Note:</strong> private stats (watch time, CTR) need YouTube Studio access — this audits everything public, where most small channels lose 80% of views.</div>' +
+        '<h3>Health checklist</h3><ul class="result-list">' +
+        checks.map(function (c) { return '<li>' + c[0] + ' ' + c[1] + '</li>'; }).join('') + '</ul>' +
+        '<h3 style="margin-top:16px">🎬 Next video ideas</h3><ol class="result-list">' +
+        ideas.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ol>';
+      showResult(panel, {
+        title: 'Channel audit complete',
+        html: html,
+        actions: [{ label: 'Copy video ideas', text: function () { return ideas.join('\n'); } }]
+      });
+    }
+  },
   'find-competitor': function (panel) {
     var v = getVals(panel);
     var q = cleanTopic(v.keyword);
@@ -596,7 +783,7 @@ else init();
 if (typeof window !== 'undefined') {
   window.__ytTools = {
     genTags: genTags, genTitles: genTitles, genHashtags: genHashtags,
-    genDescription: genDescription, genChannelNames: genChannelNames, genPlatformKeywords: genPlatformKeywords,
+    genDescription: genDescription, genChannelNames: genChannelNames, genPlatformKeywords: genPlatformKeywords, analyzeTitle: analyzeTitle, coreTopicFromTitle: coreTopicFromTitle, keywordsFromTitle: keywordsFromTitle, tooSimilar: tooSimilar,
     detectNiche: detectNiche, titleCase: titleCase, cleanTopic: cleanTopic,
     videoIdFromUrl: videoIdFromUrl
   };

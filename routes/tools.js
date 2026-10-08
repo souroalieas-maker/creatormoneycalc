@@ -18,6 +18,7 @@ const NICHE_OPTIONS = [
   { value: 'music', label: 'Music' },
   { value: 'beauty', label: 'Beauty & Fashion' },
   { value: 'motivation', label: 'Motivation' },
+  { value: 'movies', label: 'Movies & Entertainment' },
 ];
 
 const TOOLS = [
@@ -286,6 +287,33 @@ const TOOLS = [
     seoDesc: 'Download any YouTube thumbnail in HD quality. Free thumbnail downloader, no watermark, no sign-up.',
   },
   {
+    slug: 'video-analyzer',
+    name: 'AI Video & Channel Analyzer',
+    h1: 'YouTube Video & Channel Analyzer',
+    icon: '🩺',
+    badge: 'HOT',
+    desc: 'Paste any YouTube video or channel link — get an instant SEO health score, discover what is hurting your growth, and get next video ideas.',
+    buttonLabel: 'Analyze Now',
+    fields: [
+      { name: 'url', label: 'YouTube video or channel URL', type: 'text', placeholder: 'https://www.youtube.com/watch?v=… or https://www.youtube.com/@Channel' },
+      { name: 'niche', label: 'Your niche', type: 'select', options: NICHE_OPTIONS, hint: 'used for channel analysis & video ideas' },
+    ],
+    howItWorks: [
+      'Paste any YouTube video URL — we read its real public title and run a 10-point SEO audit.',
+      'Get a health score (0–100) with every issue explained and how to fix it.',
+      'Get ready-to-use next video ideas based on your content.',
+      'Paste a channel URL instead for a full channel health audit checklist.',
+    ],
+    proTip: 'Fix the <strong>red issues first</strong> — title length and keyword placement decide whether YouTube shows your video at all.',
+    faqs: [
+      { q: 'How is the score calculated?', a: 'We check 10 proven ranking factors on your title: length, keyword placement, numbers, power words, brackets, capitalization, curiosity hooks and freshness. Each issue lowers the score; fix them to climb back up.' },
+      { q: 'Can you see my private analytics?', a: 'No — and no tool can without your login. This analyzer audits everything public (titles, packaging, strategy) which is where most small channels lose 80% of their potential views.' },
+      { q: 'How often should I analyze my videos?', a: 'Audit every video before you publish (30 seconds), and re-audit your 10 lowest-performing videos to find patterns.' },
+    ],
+    seoTitle: 'YouTube Video Analyzer — Free SEO Health Score & Ideas | TubeBoost',
+    seoDesc: 'Paste a YouTube link for an instant SEO health score, growth issues and next video ideas. Free channel & video analyzer.',
+  },
+  {
     slug: 'earning-calculator',
     name: 'Earning Calculator',
     h1: 'YouTube Earning Calculator',
@@ -366,6 +394,7 @@ const TREND_SEEDS = {
   music: ['new song 2026', 'remix song', 'lyrics video', 'lofi'],
   beauty: ['makeup tutorial', 'skincare routine', 'mehndi design', 'hair care'],
   motivation: ['motivational video', 'success mindset', 'morning routine', 'discipline'],
+  movies: ['new movie 2026', 'movie trailer', 'netflix new series', 'best movies 2026'],
 };
 
 /* ---------------- routes ---------------- */
@@ -379,7 +408,7 @@ function registerTools(app) {
     res.render('public/tools', {
       tools: TOOLS,
       seoTitle: 'Free YouTube SEO Tools — Descriptions, Tags, Titles, Keywords | ' + site.site_name,
-      seoDesc: '14 free YouTube tools: SEO description generator, title & tags generator, keyword suggestions, hashtag generator, thumbnail downloader and more. No sign-up.',
+      seoDesc: '15 free YouTube tools: SEO description generator, title & tags generator, keyword suggestions, hashtag generator, thumbnail downloader and more. No sign-up.',
       canonical: canonicalFor('/tools'),
       ogImage: site.og_image || null,
       schema: {
