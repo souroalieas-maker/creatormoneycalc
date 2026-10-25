@@ -102,6 +102,18 @@ function videoIdFromUrl(url) {
   return m ? m[1] : null;
 }
 
+function fmtCount(n) {
+  n = Number(n) || 0;
+  if (n >= 1e9) return (n / 1e9).toFixed(1).replace(/\.0$/, '') + 'B';
+  if (n >= 1e6) return (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+  if (n >= 1e3) return (n / 1e3).toFixed(1).replace(/\.0$/, '') + 'K';
+  return String(n);
+}
+function fmtDate(iso) {
+  var d = new Date(iso);
+  if (isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
 /* ---------------- niche knowledge ---------------- */
 var NICHES = [
   { id: 'gaming', name: 'Gaming', match: ['game', 'gaming', 'gta', 'minecraft', 'fortnite', 'pubg', 'free fire', 'valorant', 'fifa', 'fc 25', 'ps5', 'xbox', 'roblox', 'bgmi', 'call of duty', 'esports'],
@@ -756,6 +768,108 @@ var runners = {
           }).join('') + '</ol>' +
           '<div class="pro-tip" style="margin:14px 0 0"><strong>Pro tip:</strong> pick 3 competitors with similar subscriber counts (not the giants). If they get views on a topic, you can too.</div>';
         showResult(panel, { title: 'Competitor discovery', html: html });
+      })
+      .catch(function () { setStatus(panel, 'Network error — please try again.'); });
+  },
+  'viral-trending-videos': function (panel) {
+    var v = getVals(panel);
+    var platform = v.platform || 'youtube';
+    if (platform !== 'youtube') {
+      var pName = platform === 'tiktok' ? 'TikTok' : 'Facebook';
+      setStatus(panel, 'Loading what is trending on ' + pName + '…', true);
+      fetch('/api/trending-videos?platform=' + encodeURIComponent(platform))
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          setStatus(panel, '');
+          if (!d.ok || !d.niches || !d.niches.length) {
+            showResult(panel, { title: 'Try again', html: '<p class="muted">Could not load trends right now. Please retry in a moment.</p>' });
+            return;
+          }
+          var html = '<p>These niches and formats are getting the most views on <strong>' + pName + '</strong> right now — pick one and make your version today:</p>' +
+            '<div class="cards-grid">' + d.niches.map(function (n) {
+              return '<div class="card"><h3>' + esc(n.name) + '</h3><p>' + esc(n.why) + '</p>' +
+                '<p style="margin-top:10px"><strong>Hot formats:</strong></p><ul class="result-list">' +
+                (n.formats || []).map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('') + '</ul></div>';
+            }).join('') + '</div>' +
+            '<div class="btn-row" style="margin-top:16px"><a class="btn" href="' + esc(d.exploreUrl) + '" target="_blank" rel="noopener">Watch what\'s trending on ' + pName + ' &rarr;</a></div>' +
+            (d.note ? '<p class="muted" style="margin-top:10px">' + esc(d.note) + '</p>' : '');
+          showResult(panel, { title: d.niches.length + ' niches trending on ' + pName, html: html });
+        })
+        .catch(function () { setStatus(panel, 'Network error — please try again.'); });
+      return;
+    }
+    var qs = 'platform=youtube&region=' + encodeURIComponent(v.region || 'US');
+    if (v.category) qs += '&category=' + encodeURIComponent(v.category);
+    setStatus(panel, 'Fetching live trending videos from YouTube…', true);
+    fetch('/api/trending-videos?' + qs)
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        setStatus(panel, '');
+        if (!d.ok) {
+          if (d.error === 'no_key') {
+            showResult(panel, { title: 'Live data coming soon', html: '<p class="muted">YouTube live trending is being connected right now. Meanwhile, try the TikTok and Facebook tabs above for the niches trending today.</p>' });
+          } else {
+            showResult(panel, { title: 'Try again', html: '<p class="muted">Could not load YouTube trends right now. Please retry in a moment.</p>' });
+          }
+          return;
+        }
+        if (!d.videos.length) {
+          showResult(panel, { title: 'No videos found', html: '<p class="muted">No trending videos for this filter right now. Try another country or niche.</p>' });
+          return;
+        }
+        var html = '<p>Live from YouTube\'s official trending chart — click a video to watch it, read its script, or analyze it:</p>' +
+          '<div class="trend-grid">' + d.videos.map(function (vid) {
+            var watch = 'https://www.youtube.com/watch?v=' + vid.id;
+            var meta = esc(vid.channel) + ' • ' + fmtCount(vid.views) + ' views' + (vid.likes ? ' • ' + fmtCount(vid.likes) + ' likes' : '') + (vid.publishedAt ? ' • ' + fmtDate(vid.publishedAt) : '');
+            return '<div class="trend-card">' +
+              '<a href="' + watch + '" target="_blank" rel="noopener"><img src="' + esc(vid.thumb) + '" alt="" loading="lazy"></a>' +
+              '<div class="trend-body">' +
+              '<span class="niche-badge">' + esc(vid.niche) + '</span>' +
+              '<h4><a href="' + watch + '" target="_blank" rel="noopener">' + esc(vid.title) + '</a></h4>' +
+              '<p class="trend-meta">' + meta + '</p>' +
+              '<div class="btn-row">' +
+              '<button type="button" class="copy-btn" data-script="' + esc(vid.id) + '">📜 Script</button>' +
+              '<a class="btn btn-secondary" href="/tools/video-analyzer">📊 Analyze</a>' +
+              '</div>' +
+              '<div class="transcript-box" data-transcript="' + esc(vid.id) + '" hidden></div>' +
+              '</div></div>';
+          }).join('') + '</div>';
+        showResult(panel, { title: d.videos.length + ' videos trending on YouTube now', html: html });
+        // wire script buttons
+        $all('[data-script]', panel).forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var id = btn.getAttribute('data-script');
+            var box = $('[data-transcript="' + id + '"]', panel);
+            if (!box) return;
+            if (!box.hidden) { box.hidden = true; btn.textContent = '📜 Script'; return; }
+            if (box.getAttribute('data-loaded')) { box.hidden = false; btn.textContent = '📜 Hide script'; return; }
+            btn.disabled = true; btn.textContent = 'Loading…';
+            fetch('/api/yt-transcript?id=' + encodeURIComponent(id))
+              .then(function (r) { return r.json(); })
+              .then(function (td) {
+                btn.disabled = false;
+                if (td.ok && td.text) {
+                  box.setAttribute('data-loaded', '1');
+                  box.innerHTML = '<div class="transcript-actions"><button type="button" class="copy-btn" data-copy-script="' + esc(id) + '">Copy script</button></div>' +
+                    '<div class="transcript-text">' + esc(td.text) + '</div>' +
+                    '<p class="muted" style="margin-top:8px">Study the hook and structure — then write your own version. Don\'t copy word-for-word.</p>';
+                  box.hidden = false;
+                  btn.textContent = '📜 Hide script';
+                  var cb = $('[data-copy-script]', box);
+                  if (cb) cb.addEventListener('click', function () { copyText(td.text, cb); });
+                } else {
+                  box.innerHTML = '<p class="muted">No captions available for this video.</p>';
+                  box.hidden = false;
+                  btn.textContent = '📜 Script';
+                }
+              })
+              .catch(function () {
+                btn.disabled = false; btn.textContent = '📜 Script';
+                box.innerHTML = '<p class="muted">Could not load the script. Please try again.</p>';
+                box.hidden = false;
+              });
+          });
+        });
       })
       .catch(function () { setStatus(panel, 'Network error — please try again.'); });
   }

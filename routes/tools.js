@@ -323,6 +323,60 @@ const TOOLS = [
     seoTitle: 'YouTube Earnings Calculator — Estimate Your Ad Revenue | TubeBoost',
     seoDesc: 'Estimate your potential YouTube earnings from views and RPM. Instant monthly, weekly, daily and yearly breakdowns.',
   },
+  {
+    slug: 'viral-trending-videos',
+    name: 'Viral Trending Videos',
+    h1: 'Viral Trending Videos — YouTube, TikTok & Facebook',
+    icon: '🔥',
+    badge: 'NEW',
+    desc: 'See what is going viral RIGHT NOW: live trending YouTube videos with niche labels and one-click full scripts, plus the niches and formats blowing up on TikTok and Facebook.',
+    buttonLabel: 'Show Trending',
+    fields: [
+      { name: 'platform', label: 'Platform', type: 'select', options: [
+        { value: 'youtube', label: 'YouTube (live videos)' },
+        { value: 'tiktok', label: 'TikTok (trending niches)' },
+        { value: 'facebook', label: 'Facebook (trending niches)' },
+      ]},
+      { name: 'region', label: 'Country (YouTube only)', type: 'select', options: [
+        { value: 'US', label: 'United States' },
+        { value: 'GB', label: 'United Kingdom' },
+        { value: 'IN', label: 'India' },
+        { value: 'PK', label: 'Pakistan' },
+        { value: 'GLOBAL', label: 'Global (no filter)' },
+      ]},
+      { name: 'category', label: 'Niche (YouTube only)', type: 'select', options: [
+        { value: '', label: 'All niches' },
+        { value: '10', label: 'Music' },
+        { value: '20', label: 'Gaming' },
+        { value: '24', label: 'Entertainment' },
+        { value: '23', label: 'Comedy' },
+        { value: '22', label: 'People & Blogs' },
+        { value: '25', label: 'News & Politics' },
+        { value: '26', label: 'Howto & Style' },
+        { value: '27', label: 'Education' },
+        { value: '28', label: 'Science & Tech' },
+        { value: '17', label: 'Sports' },
+        { value: '19', label: 'Travel & Events' },
+        { value: '15', label: 'Pets & Animals' },
+        { value: '1', label: 'Film & Animation' },
+      ]},
+    ],
+    howItWorks: [
+      'Pick a platform: YouTube shows live trending videos; TikTok and Facebook show the niches and formats trending now (neither offers a public trending API).',
+      'For YouTube, filter by country and niche to see exactly what is viral in your market today.',
+      'Click "📜 Script" on any YouTube video to read its full transcript — study the hook, structure and twists.',
+      'Click "📊 Analyze" to run a trending video through the SEO analyzer, then make your own better version of the topic.',
+    ],
+    proTip: 'Don\'t copy a trending video — <strong>out-angle it</strong>: take the topic, add your own niche\'s twist, and publish within 48 hours while the trend is still rising.',
+    faqs: [
+      { q: 'Are the YouTube trending videos really live?', a: 'Yes — the YouTube tab pulls the current most-popular chart directly from YouTube\'s official Data API, with real view counts and niche labels. The chart refreshes regularly, so you see what is actually hot today.' },
+      { q: 'Why do TikTok and Facebook show niches instead of live videos?', a: 'Neither platform offers a public trending-videos API, so no website can pull their live trending feed. Instead we show the niches and formats that are trending right now, with one-tap links to each platform\'s official explore page where you can watch today\'s viral videos.' },
+      { q: 'How should I use the video scripts?', a: 'For research: study how viral videos open (the first 5 seconds decide everything), where the twists land, and how they end. Then write your own script in your own words — copying a script word-for-word is plagiarism and can get a video claimed or a channel demonetized for reused content.' },
+      { q: 'Why does a video show "no captions available"?', a: 'Some creators disable captions and YouTube has not auto-generated any yet. Most popular videos do have captions — just try another video from the list.' },
+    ],
+    seoTitle: 'Viral Trending Videos — YouTube, TikTok & Facebook Trends (Free) | TubeBoost',
+    seoDesc: 'See live trending YouTube videos with niche labels and full scripts, plus the niches trending on TikTok & Facebook right now. Free viral video research.',
+  },
 ];
 
 const TOOL_MAP = {};
@@ -397,7 +451,97 @@ const TREND_SEEDS = {
   movies: ['new movie 2026', 'movie trailer', 'netflix new series', 'best movies 2026'],
 };
 
-/* ---------------- routes ---------------- */
+/* ---------------- viral trending videos ---------------- */
+const YT_CATEGORY_LABELS = {
+  '1': 'Film & Animation', '10': 'Music', '15': 'Pets & Animals', '17': 'Sports',
+  '19': 'Travel & Events', '20': 'Gaming', '22': 'People & Blogs', '23': 'Comedy',
+  '24': 'Entertainment', '25': 'News & Politics', '26': 'Howto & Style',
+  '27': 'Education', '28': 'Science & Tech',
+};
+
+/* TikTok & Facebook have no public trending-videos API — these tabs show the
+ * niches/formats trending now plus each platform's official explore page. */
+const TRENDING_NICHES = {
+  tiktok: {
+    exploreUrl: 'https://www.tiktok.com/explore',
+    note: 'Honest note: TikTok does not offer a public trending-videos API, so no tool (including this one) can pull its live trending feed. These are the niches and formats trending right now — open TikTok\'s official explore page to watch what is hot today.',
+    niches: [
+      { name: 'Comedy & POV skits', why: 'Relatable POV skits and character comedy dominate the For You feed — viewers share what they recognize from their own lives.', formats: ['POV skits ("POV: your mom when…")', 'Duet & stitch reactions', 'Recurring character series'] },
+      { name: 'Dance & trend challenges', why: 'One trending sound can carry a video to millions — dance and transition challenges ride every new audio wave.', formats: ['Trending-sound dances', 'Outfit transition challenges', 'Before/after reveals'] },
+      { name: 'Food & 15-second recipes', why: 'Quick, visual recipes get huge save rates — and saves push videos back onto the FYP again and again.', formats: ['15-second recipes', 'Street food close-ups', 'Mukbang & taste tests'] },
+      { name: 'Life hacks & DIY', why: '"Why didn\'t I know this?" clips are endlessly rewatchable and get sent to friends and family.', formats: ['Home hacks', 'Cleaning transformations', 'Budget DIY fixes'] },
+      { name: 'Beauty & glow-ups', why: 'GRWM and transformation videos hook viewers in the first second with a before/after promise.', formats: ['Get Ready With Me (GRWM)', 'Makeup transformations', 'Skincare routines'] },
+      { name: 'Gaming clips', why: 'Funny moments and impossible plays are clipped and shared within hours of big game updates.', formats: ['Funny fail compilations', 'Clutch / highlight plays', 'Montage edits to trending sounds'] },
+      { name: 'Motivation & mindset', why: 'Short discipline and success clips get saved and rewatched — building a loyal, returning audience.', formats: ['Morning routine clips', 'Quote over cinematic B-roll', 'Day-in-the-life hustle vlogs'] },
+      { name: 'AI & fantasy stories', why: 'AI-generated mini movies and fantasy/anime story series are one of the fastest-growing niches — small creators reach millions with cliffhanger episodes.', formats: ['AI fantasy / animal story series', 'Anime edits & sad story reels', '"Part 2?" cliffhanger episodes'] },
+    ],
+  },
+  facebook: {
+    exploreUrl: 'https://www.facebook.com/watch/',
+    note: 'Honest note: Facebook does not offer a public trending-videos API, so no tool (including this one) can pull its live trending feed. These are the niches and formats trending right now — open Facebook Watch to see what is hot today.',
+    niches: [
+      { name: 'Reels comedy', why: 'Short family and everyday-life comedy skits are the most-shared Reels format — and shares drive Facebook\'s algorithm.', formats: ['Family comedy skits', 'Husband-wife comedy', 'Village & small-town humor'] },
+      { name: 'DIY & crafts', why: 'Satisfying builds and clever upcycling keep viewers watching until the final reveal.', formats: ['Woodworking & builds', 'Upcycling old items', 'Satisfying restoration videos'] },
+      { name: 'Food recipes', why: 'Recipe Reels get saved and shared into family groups — enormous organic reach.', formats: ['Quick recipe Reels', 'Street food tours', 'Traditional dishes, modern twists'] },
+      { name: 'Motivational & emotional stories', why: 'Feel-good and tear-jerker story videos are shared more than almost any other Facebook format.', formats: ['Good deeds caught on camera', 'Short emotional story films', 'Before/after life transformations'] },
+      { name: 'Local news & viral clips', why: 'Real-life clips from local events spread fast through shares and community groups.', formats: ['Funny public moments', 'Weather & street incidents', 'Local talent clips'] },
+      { name: 'Pet videos', why: 'Cute and funny animals are evergreen — they cross every language, country and age group.', formats: ['Funny pet reactions', 'Rescue & adoption stories', 'Pets vs. babies moments'] },
+    ],
+  },
+};
+
+const _trendCache = new Map(); // region|category -> {t, d} (30-min TTL)
+
+/* Extract caption tracks from a YouTube watch page's embedded player data.
+ * Returns [{url, lang, asr}] in page order. */
+function extractCaptionTracks(html) {
+  if (!html) return [];
+  const idx = html.indexOf('"captionTracks"');
+  if (idx === -1) return [];
+  const chunk = html.slice(idx, idx + 20000);
+  const parts = chunk.split('"baseUrl":"');
+  parts.shift();
+  const tracks = [];
+  for (let i = 0; i < parts.length; i++) {
+    const end = parts[i].indexOf('"');
+    if (end === -1) continue;
+    const rawUrl = parts[i].slice(0, end);
+    if (rawUrl.indexOf('/api/timedtext') === -1) continue;
+    const rest = parts[i].slice(end, end + 500);
+    const langM = rest.match(/"languageCode":"([^"]+)"/);
+    tracks.push({
+      url: rawUrl.replace(/\\u0026/g, '&').replace(/\\\//g, '/'),
+      lang: langM ? langM[1] : '',
+      asr: /"kind":"asr"/.test(rest),
+    });
+    if (tracks.length >= 12) break;
+  }
+  return tracks;
+}
+
+function pickCaptionTrack(tracks) {
+  if (!tracks.length) return null;
+  const isEn = function (t) { return t.lang === 'en' || t.lang.indexOf('en-') === 0; };
+  return tracks.find(function (t) { return isEn(t) && !t.asr; })
+    || tracks.find(isEn)
+    || tracks.find(function (t) { return !t.asr; })
+    || tracks[0];
+}
+
+/* Turn a timedtext fmt=json3 payload into plain transcript text. */
+function transcriptFromJson3(text) {
+  let j = null;
+  try { j = JSON.parse(text); } catch (e) { return ''; }
+  if (!j || !Array.isArray(j.events)) return '';
+  const lines = [];
+  j.events.forEach(function (ev) {
+    if (!ev || !Array.isArray(ev.segs)) return;
+    const line = ev.segs.map(function (s) { return s.utf8 || ''; }).join('')
+      .replace(/\s+/g, ' ').trim();
+    if (line && line !== '[Music]' && line !== '[Applause]') lines.push(line);
+  });
+  return lines.join('\n');
+}
 function registerTools(app) {
   const baseUrl = function () { return (process.env.SITE_URL || '').replace(/\/+$/, ''); };
   const canonicalFor = function (p) { const b = baseUrl(); return b ? b + p : p; };
@@ -408,7 +552,7 @@ function registerTools(app) {
     res.render('public/tools', {
       tools: TOOLS,
       seoTitle: 'Free YouTube SEO Tools — Descriptions, Tags, Titles, Keywords | ' + site.site_name,
-      seoDesc: '15 free YouTube tools: SEO description generator, title & tags generator, keyword suggestions, hashtag generator, thumbnail downloader and more. No sign-up.',
+      seoDesc: '16 free YouTube tools: SEO description generator, title & tags generator, keyword suggestions, hashtag generator, thumbnail downloader and more. No sign-up.',
       canonical: canonicalFor('/tools'),
       ogImage: site.og_image || null,
       schema: {
@@ -489,7 +633,79 @@ function registerTools(app) {
     }));
     res.json({ ok: true, topics: topics, nicheName: nicheName });
   });
+
+  app.get('/api/trending-videos', async function (req, res) {
+    if (!rateOk(req, res, 20)) return;
+    const platform = String(req.query.platform || 'youtube').toLowerCase();
+    if (platform !== 'youtube') {
+      const data = TRENDING_NICHES[platform];
+      if (!data) return res.json({ ok: false });
+      return res.json({ ok: true, platform: platform, niches: data.niches, exploreUrl: data.exploreUrl, note: data.note });
+    }
+    const key = process.env.YOUTUBE_API_KEY;
+    if (!key) return res.json({ ok: false, error: 'no_key' });
+    let region = String(req.query.region || 'US').toUpperCase();
+    if (region !== 'GLOBAL' && !/^[A-Z]{2}$/.test(region)) region = 'US';
+    const category = /^\d{1,3}$/.test(String(req.query.category || '')) ? String(req.query.category) : '';
+    const cacheKey = region + '|' + category;
+    const hit = _trendCache.get(cacheKey);
+    if (hit && Date.now() - hit.t < 30 * 60 * 1000) return res.json(hit.d);
+    let apiUrl = 'https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&chart=mostPopular&maxResults=20&key=' + encodeURIComponent(key);
+    if (region !== 'GLOBAL') apiUrl += '&regionCode=' + region;
+    if (category) apiUrl += '&videoCategoryId=' + category;
+    const raw = await fetchText(apiUrl, 15000);
+    if (!raw) return res.json({ ok: false });
+    let videos = [];
+    try {
+      const j = JSON.parse(raw);
+      if (j.error || !Array.isArray(j.items)) return res.json({ ok: false });
+      videos = j.items.map(function (it) {
+        const sn = it.snippet || {};
+        const st = it.statistics || {};
+        const catId = String(sn.categoryId || '');
+        return {
+          id: it.id,
+          title: sn.title || '',
+          channel: sn.channelTitle || '',
+          channelId: sn.channelId || '',
+          thumb: (sn.thumbnails && sn.thumbnails.medium && sn.thumbnails.medium.url) || ('https://i.ytimg.com/vi/' + it.id + '/mqdefault.jpg'),
+          views: Number(st.viewCount || 0),
+          likes: Number(st.likeCount || 0),
+          publishedAt: sn.publishedAt || '',
+          categoryId: catId,
+          niche: YT_CATEGORY_LABELS[catId] || 'Entertainment',
+        };
+      }).filter(function (v) { return v.id && v.title; });
+    } catch (e) { return res.json({ ok: false }); }
+    const payload = { ok: true, platform: 'youtube', videos: videos };
+    _trendCache.set(cacheKey, { t: Date.now(), d: payload });
+    res.json(payload);
+  });
+
+  app.get('/api/yt-transcript', async function (req, res) {
+    if (!rateOk(req, res, 10)) return;
+    const id = String(req.query.id || '');
+    if (!/^[A-Za-z0-9_-]{6,20}$/.test(id)) return res.json({ ok: false });
+    try {
+      const html = await fetchText('https://www.youtube.com/watch?v=' + id, 15000);
+      const track = pickCaptionTrack(extractCaptionTracks(html || ''));
+      if (!track) return res.json({ ok: false, error: 'no_captions' });
+      const sep = track.url.indexOf('?') === -1 ? '?' : '&';
+      const raw = await fetchText(track.url + sep + 'fmt=json3', 15000);
+      if (!raw) return res.json({ ok: false });
+      const text = transcriptFromJson3(raw);
+      if (!text) return res.json({ ok: false, error: 'no_captions' });
+      res.json({ ok: true, text: text.slice(0, 120000), lang: track.lang || '' });
+    } catch (e) { res.json({ ok: false }); }
+  });
 }
 
 module.exports = registerTools;
 module.exports.TOOLS = TOOLS;
+module.exports._internals = {
+  extractCaptionTracks: extractCaptionTracks,
+  pickCaptionTrack: pickCaptionTrack,
+  transcriptFromJson3: transcriptFromJson3,
+  YT_CATEGORY_LABELS: YT_CATEGORY_LABELS,
+  TRENDING_NICHES: TRENDING_NICHES,
+};

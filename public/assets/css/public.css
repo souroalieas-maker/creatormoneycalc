@@ -770,3 +770,31 @@ ol.result-list li, ul.result-list li { margin-bottom: 10px; }
 }
 .gauge-num b { font-size: 1.9rem; line-height: 1; }
 .gauge-num span { font-size: 0.72rem; color: var(--muted); font-weight: 600; }
+
+/* ---------- Viral Trending Videos ---------- */
+.trend-grid { display: grid; gap: 14px; margin-top: 14px; }
+@media (min-width: 640px) { .trend-grid { grid-template-columns: repeat(2, 1fr); } }
+.trend-card {
+  background: #fff; border: 1px solid var(--border); border-radius: 12px;
+  overflow: hidden; display: flex; flex-direction: column;
+}
+.trend-card > a { display: block; }
+.trend-card img { width: 100%; display: block; aspect-ratio: 16/9; object-fit: cover; background: #0f172a; }
+.trend-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.trend-body h4 { margin: 0; font-size: 0.98rem; line-height: 1.35; }
+.trend-body h4 a { color: var(--navy); text-decoration: none; }
+.trend-body h4 a:hover { text-decoration: underline; }
+.niche-badge {
+  align-self: flex-start; background: #fef3c7; border: 1px solid #fcd34d;
+  color: #92400e; font-size: 0.75rem; font-weight: 700;
+  padding: 3px 10px; border-radius: 999px;
+}
+.trend-meta { margin: 0; font-size: 0.83rem; color: var(--muted); }
+.trend-card .btn-row { margin-top: auto; }
+.transcript-box { margin-top: 4px; }
+.transcript-actions { margin-bottom: 8px; }
+.transcript-text {
+  background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px; white-space: pre-wrap; font-size: 0.88rem; line-height: 1.6;
+  max-height: 320px; overflow-y: auto;
+}
