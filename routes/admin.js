@@ -131,7 +131,10 @@ module.exports = function registerAdmin(app) {
   app.get('/admin/login', async (req, res) => {
     if ((await adminCount()) === 0) return res.redirect('/admin/setup');
     if (req.session.adminId) return res.redirect('/admin/dashboard');
-    res.render('admin/login', { error: null, email: '' });
+    res.render('admin/login', {
+      error: req.query.expired ? 'Your session expired while the page was open, so the form was refreshed. Please sign in again.' : null,
+      email: '',
+    });
   });
 
   app.post('/admin/login', loginLimiter, csrfProtect, async (req, res) => {
@@ -150,7 +153,11 @@ module.exports = function registerAdmin(app) {
   /* ---------------- first-run setup ---------------- */
   app.get('/admin/setup', async (req, res) => {
     if ((await adminCount()) > 0) return res.redirect('/admin/login');
-    res.render('admin/setup', { error: null, email: '', needsToken: !!process.env.ADMIN_SETUP_TOKEN });
+    res.render('admin/setup', {
+      error: req.query.expired ? 'Your session expired while the page was open, so the form was refreshed. Please try again.' : null,
+      email: '',
+      needsToken: !!process.env.ADMIN_SETUP_TOKEN,
+    });
   });
 
   app.post('/admin/setup', setupLimiter, csrfProtect, async (req, res) => {
@@ -183,7 +190,10 @@ module.exports = function registerAdmin(app) {
 
   /* ---------------- forgot / reset password ---------------- */
   app.get('/admin/forgot', async (req, res) => {
-    res.render('admin/forgot', { error: null, email: '' });
+    res.render('admin/forgot', {
+      error: req.query.expired ? 'Your session expired while the page was open, so the form was refreshed. Please try again.' : null,
+      email: '',
+    });
   });
 
   app.post('/admin/forgot', forgotLimiter, csrfProtect, async (req, res) => {

@@ -59,6 +59,14 @@ app.use(session({
 app.use(csrfEnsure);
 app.use(csrfProtect.deferMultipart);
 
+/* Admin pages must never be restored from the browser cache/history with a
+ * stale form token (Android Chrome restoring the login page caused
+ * "Invalid form token" dead-ends). Always fetch a fresh form + token. */
+app.use('/admin', (req, res, next) => {
+  res.set('Cache-Control', 'no-store');
+  next();
+});
+
 /* Calculator nav used by header/footer/cards on every page. */
 const CALC_NAV = [
   { key: 'earnings', path: '/youtube-earnings-calculator' },
