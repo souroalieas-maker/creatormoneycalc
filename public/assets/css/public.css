@@ -791,6 +791,18 @@ ol.result-list li, ul.result-list li { margin-bottom: 10px; }
 }
 .trend-meta { margin: 0; font-size: 0.83rem; color: var(--muted); }
 .trend-card .btn-row { margin-top: auto; }
+
+/* ---------- Guest Post / Write for Us ---------- */
+.price-card .price {
+  font-size: 2rem; font-weight: 800; color: var(--emerald-dark);
+  margin: 2px 0 4px; flex: 0;
+}
+.price-card.featured {
+  border-color: var(--emerald); border-width: 2px;
+  box-shadow: 0 10px 28px rgba(22,163,74,0.14);
+}
+.price-card ul.result-list { margin: 4px 0 8px; }
+.price-card .btn { margin-top: auto; align-self: flex-start; }
 .transcript-box { margin-top: 4px; }
 .transcript-actions { margin-bottom: 8px; }
 .transcript-text {

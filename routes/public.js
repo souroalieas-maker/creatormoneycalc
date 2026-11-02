@@ -340,6 +340,68 @@ function registerPublic(app) {
   };
   app.get('/contact', async (req, res) => renderContact(res, {}));
 
+  /* ---------------- Guest Post / Write for Us ---------------- */
+  const GUEST_FAQS = [
+    { q: 'Can I publish a guest post on TubeBoost for free?', a: 'Yes. Genuine experts can publish a free contributor post if the article is original, at least 1,200 words, teaches creators something useful and is not promotional. Free posts include one dofollow link in the article or author bio.' },
+    { q: 'How much does a sponsored guest post cost?', a: 'A sponsored post is $49 (one permanent dofollow link, published within 3 business days) and Premium is $99 (up to two dofollow links, priority 48-hour publishing and 30 days featured on our blog page). A link insertion in an existing article is $29. Rates are locked in once your pitch is approved.' },
+    { q: 'Are guest post links dofollow and permanent?', a: 'Yes. Approved guest posts include permanent dofollow links. Sponsored posts are clearly labelled as sponsored, which follows Google guidelines and protects both websites.' },
+    { q: 'How long does review and publishing take?', a: 'We reply to most pitches within 2–3 business days. Free posts are published in 7–10 days, sponsored posts within 3 business days of approval and payment, and Premium posts within 48 hours.' },
+    { q: 'What topics are not accepted?', a: 'We do not accept gambling, casino or betting, adult content, crypto or forex get-rich-quick schemes, essay-writing services, pharmaceuticals, CBD, or any plagiarised, spun or misleading content.' },
+    { q: 'When do I pay for a sponsored post?', a: 'Only after your pitch and draft are approved. We share payment details by email at that stage — never send payment before approval, and never to anyone who contacts you claiming to sell TubeBoost posts through another channel.' },
+  ];
+  const GUEST_TYPES = ['Free Contributor Post', 'Sponsored Post', 'Premium Sponsored Post', 'Link Insertion'];
+  const renderGuest = async (res, extra) => {
+    const site = res.locals.site;
+    res.render('public/guest-post', {
+      guestFaqs: GUEST_FAQS,
+      errors: [],
+      values: { name: '', email: '', website: '', post_type: 'Sponsored Post', proposed_title: '', target_url: '', message: '' },
+      success: false,
+      seoTitle: `Write for Us — Guest Post on TubeBoost | Guest Posting for Creator Sites`,
+      seoDesc: 'Publish a guest post on TubeBoost and reach YouTube, TikTok and Facebook creators worldwide. Free contributor posts, sponsored posts from $49, permanent dofollow links, fast review.',
+      canonical: canonicalFor('/guest-post'),
+      ogImage: site.og_image || null,
+      schema: faqSchema(GUEST_FAQS),
+      ...extra,
+    });
+  };
+  app.get('/guest-post', async (req, res) => renderGuest(res, {}));
+  app.get('/write-for-us', async (req, res) => res.redirect(301, '/guest-post'));
+  app.post('/guest-post', async (req, res) => {
+    const name = String(req.body.name || '').trim().slice(0, 120);
+    const email = String(req.body.email || '').trim().slice(0, 160);
+    const website = String(req.body.website || '').trim().slice(0, 300);
+    const postTypeRaw = String(req.body.post_type || '').trim();
+    const post_type = GUEST_TYPES.includes(postTypeRaw) ? postTypeRaw : 'Sponsored Post';
+    const proposed_title = String(req.body.proposed_title || '').trim().slice(0, 200);
+    const target_url = String(req.body.target_url || '').trim().slice(0, 300);
+    const message = String(req.body.message || '').trim().slice(0, 5000);
+    const errors = [];
+    const isUrl = (v) => { try { const u = new URL(v); return u.protocol === 'http:' || u.protocol === 'https:'; } catch (e) { return false; } };
+    if (name.length < 2) errors.push('Please enter your name.');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) errors.push('Please enter a valid email address so we can reply to you.');
+    if (!website || !isUrl(website)) errors.push('Please enter your full website URL, starting with https://');
+    if (proposed_title.length < 5) errors.push('Please enter a proposed article title or topic.');
+    if (target_url && !isUrl(target_url)) errors.push('Please enter a valid target URL, starting with https:// — or leave it blank.');
+    if (message.length < 20) errors.push('Please add a short outline of at least 20 characters so we can review your pitch.');
+    const values = { name, email, website, post_type, proposed_title, target_url, message };
+    if (errors.length) return renderGuest(res, { errors, values });
+    const stored = [
+      `[GUEST POST PITCH — ${post_type}]`,
+      `Website: ${website}`,
+      `Proposed title: ${proposed_title}`,
+      target_url ? `Target URL: ${target_url}` : null,
+      '',
+      message,
+    ].filter((x) => x !== null).join('\n').slice(0, 5000);
+    try {
+      await db.prepare('INSERT INTO contact_messages (name, email, message) VALUES (?, ?, ?)').run(name, email, stored);
+    } catch (e) {
+      return renderGuest(res, { errors: ['Something went wrong saving your pitch. Please try again.'], values });
+    }
+    renderGuest(res, { success: true });
+  });
+
   app.post('/contact', async (req, res) => {
     const name = String(req.body.name || '').trim().slice(0, 120);
     const email = String(req.body.email || '').trim().slice(0, 160);
@@ -382,7 +444,7 @@ function registerPublic(app) {
     const staticPaths = ['/', '/calculators',
       ...CALC_IDS.map((k) => CALC_PAGES[k].path),
       ...toolPaths,
-      '/blog', '/about', '/contact', '/privacy-policy', '/terms', '/disclaimer'];
+      '/blog', '/about', '/contact', '/guest-post', '/privacy-policy', '/terms', '/disclaimer'];
     const posts = await db.prepare("SELECT slug FROM blog_posts WHERE status = 'published'").all();
     const urls = [
       ...staticPaths.map((p) => `${base}${p}`),
