@@ -151,7 +151,7 @@ const HOME_FAQS = [
   { q: 'How accurate is this calculator?', a: 'It gives a realistic estimate using the standard YouTube earnings formula, but it cannot predict your exact revenue. Real earnings depend on monetized views (not all views earn), your niche, audience country, watch time, season and ad demand. Treat every result as a ballpark figure — useful for planning, not a promise of income.' },
 ];
 
-const baseUrl = () => (process.env.SITE_URL || '').replace(/\/+$/, '');
+const baseUrl = () => (process.env.SITE_URL || 'https://creatormoneycalc.vercel.app').replace(/\/+$/, '');
 const canonicalFor = (p) => { const b = baseUrl(); return b ? b + p : p; };
 
 const faqSchema = (faqs) => (!faqs || !faqs.length ? null : {
